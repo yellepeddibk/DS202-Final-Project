@@ -18,4 +18,6 @@ data <- read_csv("covid_impact_on_work new.csv")
 
 # View the data 
 head(data)
+
+
 ```
