@@ -1,0 +1,10 @@
+---
+title: 'Homework #5'
+author: "Bhargav Yellepeddi, Neel Rajan, Ananya Ramji, Amaya Bayoumi"
+date: "12/02/2024"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
