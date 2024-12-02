@@ -1,5 +1,5 @@
 ---
-title: 'Homework #5'
+title: 'Final Project '
 author: "Bhargav Yellepeddi, Neel Rajan, Ananya Ramji, Amaya Bayoumi"
 date: "12/02/2024"
 output: html_document
@@ -7,4 +7,5 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+data <- read.csv("covid_impact_on_work new.csv")
 ```
