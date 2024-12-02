@@ -59,3 +59,4 @@ data_clean <- data[!duplicated(data), ]
 # View cleaned dataset summary
 summary(data_clean)
 ```
+## Dataset Facts 
