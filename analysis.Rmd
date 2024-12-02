@@ -8,3 +8,14 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+```{r}
+# Load necessary libraries
+library(readr)
+
+# Read the CSV file
+data <- read_csv("covid_impact_on_work new.csv")
+
+# View the data
+head(data)
+```
