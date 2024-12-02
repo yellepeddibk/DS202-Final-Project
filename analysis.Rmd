@@ -16,6 +16,6 @@ library(readr)
 # Read the CSV file
 data <- read_csv("covid_impact_on_work new.csv")
 
-# View the data
+# View the data 
 head(data)
 ```
