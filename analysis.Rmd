@@ -59,4 +59,13 @@ data_clean <- data[!duplicated(data), ]
 # View cleaned dataset summary
 summary(data_clean)
 ```
-## Dataset Facts 
+## Dataset Facts
+```{r}
+# Calculate dataset size
+dataset_size <- dim(data)  # Dimensions of the dataset: [rows, columns]
+
+# Display dataset size
+cat("Number of rows (observations):", dataset_size[1], "\n")
+cat("Number of columns (variables):", dataset_size[2], "\n")
+
+```
