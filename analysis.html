@@ -358,7 +358,34 @@ Bayoumi</h4>
 </div>
 
 
+<pre class="r"><code># Load necessary libraries
+library(readr)
 
+# Read the CSV file
+data &lt;- read_csv(&quot;covid_impact_on_work new.csv&quot;)</code></pre>
+<pre><code>## Rows: 10000 Columns: 15
+## ── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr  (4): Stress_Level, Sector, Hours_Worked_Per_Day, Meetings_Per_Day
+## dbl (11): Increased_Work_Hours, Work_From_Home, Productivity_Change, Health_...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code># View the data
+head(data)</code></pre>
+<pre><code>## # A tibble: 6 × 15
+##   Stress_Level Sector   Increased_Work_Hours Work_From_Home Hours_Worked_Per_Day
+##   &lt;chr&gt;        &lt;chr&gt;                   &lt;dbl&gt;          &lt;dbl&gt; &lt;chr&gt;               
+## 1 Low          Retail                      1              1 6.392.393.639.805.8…
+## 2 Low          IT                          1              1 9.171.983.537.957.5…
+## 3 Medium       Retail                      1              0 10.612.560.951.456.…
+## 4 Medium       Educati…                    1              1 5.546.168.647.409.5…
+## 5 Medium       Educati…                    0              1 11.424.615.456.733.…
+## 6 Low          IT                          1              1 7.742.897.931.229.7…
+## # ℹ 10 more variables: Meetings_Per_Day &lt;chr&gt;, Productivity_Change &lt;dbl&gt;,
+## #   Health_Issue &lt;dbl&gt;, Job_Security &lt;dbl&gt;, Childcare_Responsibilities &lt;dbl&gt;,
+## #   Commuting_Changes &lt;dbl&gt;, Technology_Adaptation &lt;dbl&gt;, Salary_Changes &lt;dbl&gt;,
+## #   Team_Collaboration_Challenges &lt;dbl&gt;, Affected_by_Covid &lt;dbl&gt;</code></pre>
 
 
 
