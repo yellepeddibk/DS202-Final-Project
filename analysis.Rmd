@@ -8,7 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
+## Load and visualize data
 ```{r}
 # Load necessary libraries
 library(readr)
@@ -18,6 +18,9 @@ data <- read_csv("covid_impact_on_work new.csv")
 
 # View the data 
 head(data)
+```
+## Data Cleaning
+```{r}
 # Inspect the dataset
 colnames(data) # View the column names to ensure proper references
 str(data)      # Structure of the data
