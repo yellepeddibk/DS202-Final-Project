@@ -172,3 +172,40 @@ if (all(c("Work_From_Home", "Productivity_Change", "Stress_Level", "Childcare_Re
 }
 ```
 
+```{r}
+# Check if Productivity_Change exists in the dataset
+if ("Productivity_Change" %in% colnames(data)) {
+  
+  # Ensure Productivity_Change is numeric
+  if (!is.numeric(data$Productivity_Change)) {
+    data$Productivity_Change <- as.numeric(data$Productivity_Change)
+  }
+  
+  # Replace missing values with the mean
+  data$Productivity_Change[is.na(data$Productivity_Change)] <- mean(data$Productivity_Change, na.rm = TRUE)
+  
+  # Calculate and display summary statistics
+  summary_stats <- data %>%
+    summarise(
+      Mean = mean(Productivity_Change),
+      Median = median(Productivity_Change),
+      Standard_Deviation = sd(Productivity_Change),
+      Minimum = min(Productivity_Change),
+      Maximum = max(Productivity_Change)
+    )
+  
+  print("Summary Statistics for Productivity_Change:")
+  print(summary_stats)
+  
+  # Visualize the distribution with a histogram and density plot
+  ggplot(data, aes(x = Productivity_Change)) +
+    geom_histogram(aes(y = after_stat(density)), bins = 30, fill = "blue", alpha = 0.7, color = "black") +
+    geom_density(color = "red", linewidth = 1) +  # Updated for ggplot2 v3.4.0+
+    labs(
+      title = "Distribution of Productivity_Change",
+      x = "Productivity Change",
+      y = "Density"
+    ) +
+    theme_minimal()
+}
+```
