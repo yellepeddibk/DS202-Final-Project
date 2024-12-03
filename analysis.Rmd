@@ -84,7 +84,6 @@ cat("Number of columns (variables):", dataset_size[2], "\n")
 
 ```
 
-
 ```{r}
 # Outliers: 
 # Function to identify and flag outliers using the IQR method
@@ -128,3 +127,47 @@ if (nrow(long_data) > 0) {
 }
 ```
 
+```{r}
+# Check if required columns exist in the dataset
+if (all(c("Work_From_Home", "Productivity_Change", "Stress_Level", "Childcare_Responsibilities") %in% colnames(data))) {
+  
+  # Convert necessary columns to appropriate types
+  if (!is.numeric(data$Work_From_Home)) {
+    data$Work_From_Home <- as.numeric(data$Work_From_Home)
+  }
+  if (!is.numeric(data$Productivity_Change)) {
+    data$Productivity_Change <- as.numeric(data$Productivity_Change)
+  }
+  if (!is.numeric(data$Childcare_Responsibilities)) {
+    data$Childcare_Responsibilities <- as.numeric(data$Childcare_Responsibilities)
+  }
+  
+  # Replace missing values in Productivity_Change with its mean
+  data$Productivity_Change[is.na(data$Productivity_Change)] <- mean(data$Productivity_Change, na.rm = TRUE)
+  
+  # Analyze impact of Work_From_Home across Stress_Level and Childcare_Responsibilities
+  analysis <- data %>%
+    group_by(Work_From_Home, Stress_Level, Childcare_Responsibilities) %>%
+    summarise(
+      Average_Productivity_Change = mean(Productivity_Change, na.rm = TRUE),
+      Median_Productivity_Change = median(Productivity_Change, na.rm = TRUE),
+      Count = n()
+    )
+  
+  # Print the summary table
+  print(analysis)
+  
+  # Visualize the impact
+  ggplot(analysis, aes(x = Stress_Level, y = Average_Productivity_Change, fill = as.factor(Work_From_Home))) +
+    geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
+    facet_wrap(~ Childcare_Responsibilities, scales = "free") +
+    labs(
+      title = "Impact of Working From Home on Productivity Change by Stress Level and Childcare Responsibilities",
+      x = "Stress Level",
+      y = "Average Productivity Change",
+      fill = "Work From Home (0 = No, 1 = Yes)"
+    ) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1), axis.title.x = element_text(size = 12))
+}
+```
