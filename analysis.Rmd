@@ -19,6 +19,7 @@ library(readr)
 library(ggplot2)
 library(moments)
 library(dplyr)
+library(tidyr)
 
 # Read the CSV file
 data <- read_csv("covid_impact_on_work new.csv")
@@ -62,15 +63,6 @@ if ("Work_From_Home" %in% colnames(data)) {
 
 convert_to_numeric <- function(column) {
   as.numeric(gsub("[^0-9\\.]", "", column)) # Remove non-numeric characters
-}
-
-# Convert columns to numeric if needed
-if ("Hours_Worked_Per_Day" %in% colnames(data)) {
-  data$Hours_Worked_Per_Day <- convert_to_numeric(data$Hours_Worked_Per_Day)
-}
-
-if ("Meetings_Per_Day" %in% colnames(data)) {
-  data$Meetings_Per_Day <- convert_to_numeric(data$Meetings_Per_Day)
 }
 
 # Remove duplicates
