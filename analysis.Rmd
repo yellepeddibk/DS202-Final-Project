@@ -78,6 +78,7 @@ data_clean <- data[!duplicated(data), ]
 
 # View cleaned dataset summary
 summary(data_clean)
+
 ```
 ## Dataset Facts
 ```{r}
@@ -88,35 +89,4 @@ dataset_size <- dim(data)  # Dimensions of the dataset: [rows, columns]
 cat("Number of rows (observations):", dataset_size[1], "\n")
 cat("Number of columns (variables):", dataset_size[2], "\n")
 
-```
-
-```{r}
-# Distribution:
-
-# Select numeric columns
-numeric_data <- data_clean[sapply(data_clean, is.numeric)]
-
-# Remove constant columns
-constant_columns <- sapply(numeric_data, function(col) length(unique(col)) == 1)
-numeric_data <- numeric_data[, !constant_columns]
-
-# Plot distributions and calculate skewness
-for (col_name in names(numeric_data)) {
-  tryCatch({
-    # Plot the distribution
-    print(
-      ggplot(data_clean, aes_string(x = col_name)) +
-        geom_histogram(aes(y = ..density..), bins = 30, fill = "blue", alpha = 0.7, color = "black") +
-        geom_density(color = "red", size = 1) +
-        labs(title = paste("Distribution of", col_name), x = col_name, y = "Density") +
-        theme_minimal()
-    )
-    
-    # Calculate skewness
-    skew <- skewness(data_clean[[col_name]], na.rm = TRUE)
-    cat(paste("Skewness of", col_name, ":", round(skew, 2), "\n"))
-  }, error = function(e) {
-    cat(paste("Error processing column:", col_name, "-", e$message, "\n"))
-  })
-}
 ```
