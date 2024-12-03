@@ -17,9 +17,9 @@ if (!requireNamespace("moments", quietly = TRUE)) {
 # Load necessary libraries
 library(readr)
 library(ggplot2)
-library(dplyr)
-library(tidyr)
 library(moments)
+library(dplyr)
+
 # Read the CSV file
 data <- read_csv("covid_impact_on_work new.csv")
 
@@ -60,6 +60,19 @@ if ("Work_From_Home" %in% colnames(data)) {
   warning("Column 'Work_From_Home' does not exist in the dataset.")
 }
 
+convert_to_numeric <- function(column) {
+  as.numeric(gsub("[^0-9\\.]", "", column)) # Remove non-numeric characters
+}
+
+# Convert columns to numeric if needed
+if ("Hours_Worked_Per_Day" %in% colnames(data)) {
+  data$Hours_Worked_Per_Day <- convert_to_numeric(data$Hours_Worked_Per_Day)
+}
+
+if ("Meetings_Per_Day" %in% colnames(data)) {
+  data$Meetings_Per_Day <- convert_to_numeric(data$Meetings_Per_Day)
+}
+
 # Remove duplicates
 data_clean <- data[!duplicated(data), ]
 
@@ -69,12 +82,13 @@ summary(data_clean)
 ```
 ## Dataset Facts
 ```{r}
-# Calculate dataset size
+# Size:
 dataset_size <- dim(data)  # Dimensions of the dataset: [rows, columns]
 
 # Display dataset size
 cat("Number of rows (observations):", dataset_size[1], "\n")
 cat("Number of columns (variables):", dataset_size[2], "\n")
+
 
 ```
 
