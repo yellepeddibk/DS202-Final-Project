@@ -58,5 +58,49 @@ data_clean <- data[!duplicated(data), ]
 
 # View cleaned dataset summary
 summary(data_clean)
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+# Function to identify and flag outliers using the IQR method
+flag_outliers <- function(column) {
+  Q1 <- quantile(column, 0.25, na.rm = TRUE)
+  Q3 <- quantile(column, 0.75, na.rm = TRUE)
+  IQR <- Q3 - Q1
+  lower_bound <- Q1 - 1.5 * IQR
+  upper_bound <- Q3 + 1.5 * IQR
+  return(column < lower_bound | column > upper_bound)
+}
+
+# Identify numeric columns
+numeric_columns <- sapply(data_clean, is.numeric)
+
+# Prepare long_data
+long_data <- data_clean %>%
+  select(all_of(names(data_clean)[numeric_columns])) %>%
+  mutate(row_id = row_number()) %>%
+  pivot_longer(cols = -row_id, names_to = "Variable", values_to = "Value") %>%
+  group_by(Variable) %>%
+  mutate(Outlier = flag_outliers(Value)) %>%
+  ungroup()
+
+# Check if data is available for plotting
+if (nrow(long_data) > 0) {
+  # Create histogram
+  ggplot(long_data, aes(x = Value, fill = Outlier)) +
+    geom_histogram(binwidth = 1, alpha = 0.7, position = "identity") +
+    facet_wrap(~ Variable, scales = "free", ncol = 3) +
+    labs(
+      title = "Histogram of Numeric Variables with Outliers Highlighted",
+      x = "Value",
+      y = "Count",
+      fill = "Outlier Status"
+    ) +
+    scale_fill_manual(values = c("grey", "red"), labels = c("No Outlier", "Outlier")) +
+    theme_minimal()
+} else {
+  print("No numeric variables with variability to plot.")
+}
 ```
 ## Dataset Facts 
