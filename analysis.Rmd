@@ -127,3 +127,4 @@ if (nrow(long_data) > 0) {
   print("No numeric variables with variability to plot.")
 }
 ```
+
