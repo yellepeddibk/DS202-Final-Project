@@ -89,9 +89,8 @@ numeric_data <- data_clean[sapply(data_clean, is.numeric)]
 # Plot distributions and calculate skewness
 for (col_name in names(numeric_data)) {
   print(ggplot(data_clean, aes_string(x = col_name)) +
-          geom_histogram(aes(y = ..density..), bins = 30, fill = "blue", alpha = 0.7, color = "black") +
-          geom_density(color = "red", size = 1) +
-          labs(title = paste("Distribution of", col_name), x = col_name, y = "Density") +
+          geom_boxplot(fill = "lightblue", color = "black", outlier.color = "red") +
+          labs(title = paste("Boxplot of", col_name), x = col_name, y = "Value") +
           theme_minimal())
   
   skew <- skewness(data_clean[[col_name]], na.rm = TRUE)
