@@ -103,4 +103,34 @@ if (nrow(long_data) > 0) {
   print("No numeric variables with variability to plot.")
 }
 ```
-## Dataset Facts 
+## Dataset Facts
+```{r}
+# Calculate dataset size
+dataset_size <- dim(data)  # Dimensions of the dataset: [rows, columns]
+
+# Display dataset size
+cat("Number of rows (observations):", dataset_size[1], "\n")
+cat("Number of columns (variables):", dataset_size[2], "\n")
+
+```
+
+```{r}
+# Load necessary libraries
+library(ggplot2)
+library(moments)
+
+# Select numeric columns
+numeric_data <- data_clean[sapply(data_clean, is.numeric)]
+
+# Plot distributions and calculate skewness
+for (col_name in names(numeric_data)) {
+  print(ggplot(data_clean, aes_string(x = col_name)) +
+          geom_histogram(aes(y = ..density..), bins = 30, fill = "blue", alpha = 0.7, color = "black") +
+          geom_density(color = "red", size = 1) +
+          labs(title = paste("Distribution of", col_name), x = col_name, y = "Density") +
+          theme_minimal())
+  
+  skew <- skewness(data_clean[[col_name]], na.rm = TRUE)
+  cat(paste("Skewness of", col_name, ":", round(skew, 2), "\n"))
+}
+```
