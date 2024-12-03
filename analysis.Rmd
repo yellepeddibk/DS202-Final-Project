@@ -92,25 +92,6 @@ cat("Number of columns (variables):", dataset_size[2], "\n")
 
 ```
 
-```{r}
-# Load necessary libraries
-library(ggplot2)
-library(moments)
-
-# Select numeric columns
-numeric_data <- data_clean[sapply(data_clean, is.numeric)]
-
-# Plot distributions and calculate skewness
-for (col_name in names(numeric_data)) {
-  print(ggplot(data_clean, aes_string(x = col_name)) +
-          geom_boxplot(fill = "lightblue", color = "black", outlier.color = "red") +
-          labs(title = paste("Boxplot of", col_name), x = col_name, y = "Value") +
-          theme_minimal())
-  
-  skew <- skewness(data_clean[[col_name]], na.rm = TRUE)
-  cat(paste("Skewness of", col_name, ":", round(skew, 2), "\n"))
-}
-```
 
 ```{r}
 # Outliers: 
