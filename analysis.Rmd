@@ -299,7 +299,6 @@ if (all(c("Stress_Level", "Work_From_Home", "Productivity_Change") %in% colnames
   print(stress_analysis)
 }
 #The analysis reveals that employees with medium stress levels benefit the most from remote work, showing a higher average productivity change (0.507) compared to those not working from home (0.484), likely due to the flexibility and work-life balance remote work provides. Conversely, employees with high stress levels experience slightly lower productivity when working remotely (0.495) compared to in-person work (0.525), suggesting they may require more immediate support or structure. For employees with low stress levels, productivity outcomes are relatively balanced between remote (0.501) and in-person work (0.51). Overall, while remote work appears advantageous for those with moderate stress, high-stress employees may benefit from targeted support to thrive in remote environments.
-
 ```
 
 ```{r}
@@ -317,4 +316,101 @@ if (all(c("Childcare_Responsibilities", "Work_From_Home", "Productivity_Change")
   print(childcare_analysis)
 }
 #The analysis shows that employees without childcare responsibilities generally benefit slightly from remote work, with higher average productivity (0.503) compared to those working on-site (0.500). In contrast, employees with childcare responsibilities show slightly lower productivity when working from home (0.501) compared to those not working from home (0.504), likely due to competing demands at home. Median productivity remains consistent across groups, with those managing childcare responsibilities showing a median value of 1 regardless of work arrangement, suggesting that childcare responsibilities do not drastically impact productivity for most employees. Overall, remote work appears more beneficial for employees without childcare responsibilities, while those with childcare may need additional support to balance their responsibilities effectively.
+```
+
+```{r}
+# Analyze the relationship between Salary Changes and Productivity Change
+if (all(c("Salary_Changes", "Productivity_Change") %in% colnames(data))) {
+  
+  # Ensure necessary columns are numeric
+  if (!is.numeric(data$Productivity_Change)) {
+    data$Productivity_Change <- as.numeric(data$Productivity_Change)
+  }
+  if (!is.numeric(data$Salary_Changes)) {
+    data$Salary_Changes <- as.numeric(data$Salary_Changes)
+  }
+  
+  # Filter valid data
+  data_filtered <- data %>%
+    filter(!is.na(Salary_Changes) & !is.na(Productivity_Change))
+  
+  # Perform statistical summary
+  salary_analysis <- data_filtered %>%
+    group_by(Salary_Changes) %>%
+    summarise(
+      Avg_Productivity_Change = mean(Productivity_Change, na.rm = TRUE),
+      Median_Productivity_Change = median(Productivity_Change, na.rm = TRUE),
+      Count = n()
+    )
+  
+  print("Analysis of Productivity Change by Salary Changes:")
+  print(salary_analysis)
+  
+  # Perform a t-test to test if the means of the two groups are significantly different
+  salary_cut_group <- data_filtered %>%
+    filter(Salary_Changes == 1) %>%
+    pull(Productivity_Change)
+  
+  stable_salary_group <- data_filtered %>%
+    filter(Salary_Changes == 0) %>%
+    pull(Productivity_Change)
+  
+  t_test_result <- t.test(salary_cut_group, stable_salary_group)
+  
+  print("T-test Results:")
+  print(t_test_result)
+# The analysis of productivity change based on salary changes shows minimal differences between employees who experienced salary cuts and those with stable salaries. The average productivity change for employees with stable salaries (0.502) is nearly identical to those with salary cuts (0.501). Both groups have a median productivity change of 1, suggesting that the central tendency of productivity is similar across the two groups. A Welch Two-Sample t-test was conducted to compare the means, resulting in a t-value of -0.1154 and a p-value of 0.9081. This high p-value indicates no statistically significant difference in productivity changes between the two groups. The 95% confidence interval (-0.0262, 0.0233) further confirms the lack of meaningful difference. Overall, salary changes appear to have negligible impact on productivity change.
+}
+```
+
+```{r}
+# Analyze the impact of remote work on productivity for employees with Health Issues
+if (all(c("Health_Issue", "Work_From_Home", "Productivity_Change") %in% colnames(data))) {
+  
+  # Ensure necessary columns are numeric
+  if (!is.numeric(data$Productivity_Change)) {
+    data$Productivity_Change <- as.numeric(data$Productivity_Change)
+  }
+  if (!is.numeric(data$Health_Issue)) {
+    data$Health_Issue <- as.numeric(data$Health_Issue)
+  }
+  if (!is.numeric(data$Work_From_Home)) {
+    data$Work_From_Home <- as.numeric(data$Work_From_Home)
+  }
+  
+  # Filter valid data
+  data_filtered <- data %>%
+    filter(!is.na(Health_Issue) & !is.na(Work_From_Home) & !is.na(Productivity_Change))
+  
+  # Perform grouped analysis
+  health_issue_analysis <- data_filtered %>%
+    group_by(Health_Issue, Work_From_Home) %>%
+    summarise(
+      Avg_Productivity_Change = mean(Productivity_Change, na.rm = TRUE),
+      Median_Productivity_Change = median(Productivity_Change, na.rm = TRUE),
+      Count = n(),
+      .groups = "drop"
+    )
+  
+  # Print the summary table
+  print("Impact of Remote Work on Productivity for Employees with Health Issues:")
+  print(health_issue_analysis)
+  
+  # Visualize the data
+  ggplot(health_issue_analysis, aes(x = as.factor(Health_Issue), y = Avg_Productivity_Change, fill = as.factor(Work_From_Home))) +
+    geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
+    geom_text(aes(label = sprintf("%.2f", Avg_Productivity_Change)), 
+              position = position_dodge(width = 0.9), 
+              vjust = -0.5, 
+              size = 3) +
+    labs(
+      title = "Average Productivity Change by Health Issue and Work From Home Status",
+      x = "Health Issue (0 = No, 1 = Yes)",
+      y = "Average Productivity Change",
+      fill = "Work From Home (0 = No, 1 = Yes)"
+    ) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 0, hjust = 0.5))
+}
+# The analysis reveals that remote work has varying impacts on productivity depending on whether employees have health issues. For employees without health issues, those working on-site show a slightly higher average productivity change (0.506) compared to remote workers (0.501), but the difference is minimal, and both groups maintain a median productivity change of 1. In contrast, for employees with health issues, remote work appears to mitigate productivity declines. On-site employees with health issues show a lower average productivity change (0.491) and a median productivity change of 0, whereas remote employees with health issues show an average productivity change of 0.506 and a median of 1. This indicates that remote work provides a more accommodating environment for employees with health issues, helping them achieve similar productivity levels to their counterparts without health issues. Overall, the results suggest that remote work may serve as an effective strategy to support productivity for employees with health-related challenges.
 ```

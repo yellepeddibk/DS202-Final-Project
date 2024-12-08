@@ -13,3 +13,5 @@ We answer the follwing questions:
 - Can we identify any trends in productivity change over time (if the dataset has a time variable)? 
 - What are the key takeaways or recommendations based on your analysis?
 - What can we improve if this analysis were conducted again?
+- Do employees who experienced salary cuts show different productivity trends compared to those with stable salaries?
+- Does remote work mitigate productivity declines for employees with Health_Issues?
