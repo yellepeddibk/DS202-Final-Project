@@ -127,7 +127,47 @@ if (nrow(long_data) > 0) {
 }
 ```
 
+#### Question 1: What is the distribution of the Productivity_Change Variable?
+```{r}
+# Check if Productivity_Change exists in the dataset
+if ("Productivity_Change" %in% colnames(data)) {
+  
+  # Ensure Productivity_Change is numeric
+  if (!is.numeric(data$Productivity_Change)) {
+    data$Productivity_Change <- as.numeric(data$Productivity_Change)
+  }
+  
+  # Replace missing values with the mean
+  data$Productivity_Change[is.na(data$Productivity_Change)] <- mean(data$Productivity_Change, na.rm = TRUE)
+  
+  # Calculate and display summary statistics
+  summary_stats <- data %>%
+    summarise(
+      Mean = mean(Productivity_Change),
+      Median = median(Productivity_Change),
+      Standard_Deviation = sd(Productivity_Change),
+      Minimum = min(Productivity_Change),
+      Maximum = max(Productivity_Change)
+    )
+  
+  print("Summary Statistics for Productivity_Change:")
+  print(summary_stats)
+  
+  # Visualize the distribution with a histogram and density plot
+  ggplot(data, aes(x = Productivity_Change)) +
+    geom_histogram(aes(y = after_stat(density)), bins = 30, fill = "blue", alpha = 0.7, color = "black") +
+    geom_density(color = "red", linewidth = 1) +  # Updated for ggplot2 v3.4.0+
+    labs(
+      title = "Distribution of Productivity_Change",
+      x = "Productivity Change",
+      y = "Density"
+    ) +
+    theme_minimal()
+}
+```
+
 ## Analysis
+#### Question 2: What is the impact of working from home on productivity change? - Stress Level & Working from Home
 ```{r}
 # Check if required columns exist in the dataset
 if (all(c("Work_From_Home", "Productivity_Change", "Stress_Level", "Childcare_Responsibilities") %in% colnames(data))) {
@@ -173,44 +213,7 @@ if (all(c("Work_From_Home", "Productivity_Change", "Stress_Level", "Childcare_Re
 }
 ```
 
-```{r}
-# Check if Productivity_Change exists in the dataset
-if ("Productivity_Change" %in% colnames(data)) {
-  
-  # Ensure Productivity_Change is numeric
-  if (!is.numeric(data$Productivity_Change)) {
-    data$Productivity_Change <- as.numeric(data$Productivity_Change)
-  }
-  
-  # Replace missing values with the mean
-  data$Productivity_Change[is.na(data$Productivity_Change)] <- mean(data$Productivity_Change, na.rm = TRUE)
-  
-  # Calculate and display summary statistics
-  summary_stats <- data %>%
-    summarise(
-      Mean = mean(Productivity_Change),
-      Median = median(Productivity_Change),
-      Standard_Deviation = sd(Productivity_Change),
-      Minimum = min(Productivity_Change),
-      Maximum = max(Productivity_Change)
-    )
-  
-  print("Summary Statistics for Productivity_Change:")
-  print(summary_stats)
-  
-  # Visualize the distribution with a histogram and density plot
-  ggplot(data, aes(x = Productivity_Change)) +
-    geom_histogram(aes(y = after_stat(density)), bins = 30, fill = "blue", alpha = 0.7, color = "black") +
-    geom_density(color = "red", linewidth = 1) +  # Updated for ggplot2 v3.4.0+
-    labs(
-      title = "Distribution of Productivity_Change",
-      x = "Productivity Change",
-      y = "Density"
-    ) +
-    theme_minimal()
-}
-```
-
+#### Question 2:  What is the impact of working from home on productivity change? - Sector
 ```{r}
 # Grouping by Sector to Identify Trends in Productivity change
 # Check if Productivity_Change and Sector exist in the dataset
@@ -256,8 +259,9 @@ if (all(c("Sector", "Productivity_Change") %in% colnames(data))) {
 #The analysis reveals consistent productivity changes across sectors, with average values ranging narrowly from 0.496 (Retail) to 0.508 (Education). Education and IT demonstrate slightly higher productivity changes, possibly reflecting their better adaptation to shifts in work dynamics, such as remote work compatibility. Healthcare shows balanced productivity with an average of 0.500, reflecting its essential and stable operations. Retail lags behind, with the lowest average (0.496) and a median of 0, suggesting significant challenges in adjusting to external factors like COVID-19. The robust and balanced sample sizes across sectors ensure the trends are representative. Overall, Education and IT show slight outperformance, Healthcare demonstrates resilience, and Retail faces notable productivity challenges.
 ```
 
+#### Question 2:  What is the impact of working from home on productivity change? - Sector & Working from Home
 ```{r}
-# Segmentation analysis: Productivity Change by Sector and Work From Home
+# Segmentation analysis: Productivity Change by Sector & Working from Home
 if (all(c("Sector", "Work_From_Home", "Productivity_Change") %in% colnames(data))) {
   segmentation_analysis <- data %>%
     group_by(Sector, Work_From_Home) %>%

@@ -8,6 +8,10 @@ We answer the follwing questions:
 
 - What is the distribution of the Productivity_Change Variable? 
 - What is the impact of working from home on productivity change?
+-   Stress Level & Working from Home
+-   Sector
+-   Sector & Working from Home
+-   Health Issues & Working from Home
 - Are there significant correlations between productivity_change and other numeric variables? 
 - What cleaning methods were applied, and why?
 - Can we identify any trends in productivity change over time (if the dataset has a time variable)? 
