@@ -314,6 +314,22 @@ if (all(c("Stress_Level", "Work_From_Home", "Productivity_Change") %in% colnames
   
   print("Impact of Stress Level on Productivity by Work From Home Status")
   print(stress_analysis)
+   # Create a graph to visualize the analysis
+  ggplot(stress_analysis, aes(x = as.factor(Stress_Level), y = Avg_Productivity, fill = as.factor(Work_From_Home))) +
+    geom_bar(stat = "identity", position = position_dodge(width = 0.6), width = 0.5, alpha = 0.8) +
+    geom_text(aes(label = round(Avg_Productivity, 3)), 
+              position = position_dodge(width = 0.6), 
+              vjust = -0.5, 
+              size = 3) +
+    labs(
+      title = "Impact of Stress Level on Productivity by Work From Home Status",
+      x = "Stress Level (e.g., Low, Medium, High)",
+      y = "Average Productivity Change",
+      fill = "Work From Home (0 = No, 1 = Yes)"
+    ) +
+    coord_cartesian(ylim = c(0.45, 0.55)) +  # Adjust the visible range if needed
+    theme_minimal() +
+    theme(axis.text.x = element_text(size = 10, angle = 0, hjust = 0.5))
 }
 #The analysis reveals that employees with medium stress levels benefit the most from remote work, showing a higher average productivity change (0.507) compared to those not working from home (0.484), likely due to the flexibility and work-life balance remote work provides. Conversely, employees with high stress levels experience slightly lower productivity when working remotely (0.495) compared to in-person work (0.525), suggesting they may require more immediate support or structure. For employees with low stress levels, productivity outcomes are relatively balanced between remote (0.501) and in-person work (0.51). Overall, while remote work appears advantageous for those with moderate stress, high-stress employees may benefit from targeted support to thrive in remote environments.
 ```
@@ -331,6 +347,23 @@ if (all(c("Childcare_Responsibilities", "Work_From_Home", "Productivity_Change")
   
   print("Impact of Childcare Responsibilities on Productivity by Work From Home Status")
   print(childcare_analysis)
+  # Create a graph to visualize the analysis
+   # Create a graph to visualize the analysis
+  ggplot(childcare_analysis, aes(x = as.factor(Childcare_Responsibilities), y = Avg_Productivity, fill = as.factor(Work_From_Home))) +
+    geom_bar(stat = "identity", position = position_dodge(width = 0.6), width = 0.5, alpha = 0.8) +
+    geom_text(aes(label = round(Avg_Productivity, 3)), 
+              position = position_dodge(width = 0.6), 
+              vjust = -0.5, 
+              size = 3) +
+    labs(
+      title = "Impact of Childcare Responsibilities on Productivity by Work From Home Status",
+      x = "Childcare Responsibilities (0 = No, 1 = Yes)",
+      y = "Average Productivity Change",
+      fill = "Work From Home (0 = No, 1 = Yes)"
+    ) +
+    coord_cartesian(ylim = c(0.45, 0.55)) +  # Display only from 0.45 to 0.55
+    theme_minimal() +
+    theme(axis.text.x = element_text(size = 10, angle = 0, hjust = 0.5))
 }
 #The analysis shows that employees without childcare responsibilities generally benefit slightly from remote work, with higher average productivity (0.503) compared to those working on-site (0.500). In contrast, employees with childcare responsibilities show slightly lower productivity when working from home (0.501) compared to those not working from home (0.504), likely due to competing demands at home. Median productivity remains consistent across groups, with those managing childcare responsibilities showing a median value of 1 regardless of work arrangement, suggesting that childcare responsibilities do not drastically impact productivity for most employees. Overall, remote work appears more beneficial for employees without childcare responsibilities, while those with childcare may need additional support to balance their responsibilities effectively.
 ```
