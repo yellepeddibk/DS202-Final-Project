@@ -6,6 +6,7 @@ In this analysis, we explore a dataset detailing information about how covid had
 
 We answer the follwing questions:
 
+- What cleaning methods were applied, and why?
 - What is the distribution of the Productivity_Change Variable? 
 - What is the impact of working from home on productivity change?
 -   Stress Level & Working from Home
@@ -13,7 +14,6 @@ We answer the follwing questions:
 -   Sector & Working from Home
 -   Health Issues & Working from Home
 - Are there significant correlations between productivity_change and other numeric variables? 
-- What cleaning methods were applied, and why?
 - Can we identify any trends in productivity change over time (if the dataset has a time variable)? 
 - What are the key takeaways or recommendations based on your analysis?
 - What can we improve if this analysis were conducted again?

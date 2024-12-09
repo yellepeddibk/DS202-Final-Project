@@ -76,6 +76,11 @@ data_clean <- data[!duplicated(data), ]
 summary(data_clean)
 ```
 
+#### Question 1: What cleaning methods were applied, and why?
+```{r}
+
+```
+
 ## Dataset Facts
 ```{r}
 # Size:
@@ -131,7 +136,7 @@ if (nrow(long_data) > 0) {
 }
 ```
 
-#### Question 1: What is the distribution of the Productivity_Change Variable?
+#### Question 2: What is the distribution of the Productivity_Change Variable?
 ```{r}
 # Check if Productivity_Change exists in the dataset
 if ("Productivity_Change" %in% colnames(data)) {
@@ -171,7 +176,7 @@ if ("Productivity_Change" %in% colnames(data)) {
 ```
 
 ## Analysis
-#### Question 2: What is the impact of working from home on productivity change? - Stress Level & Working from Home
+#### Question 3: What is the impact of working from home on productivity change? - Stress Level & Working from Home
 ```{r}
 # Check if required columns exist in the dataset
 if (all(c("Work_From_Home", "Productivity_Change", "Stress_Level", "Childcare_Responsibilities") %in% colnames(data))) {
@@ -217,7 +222,7 @@ if (all(c("Work_From_Home", "Productivity_Change", "Stress_Level", "Childcare_Re
 }
 ```
 
-#### Question 2:  What is the impact of working from home on productivity change? - Sector
+#### Question 3:  What is the impact of working from home on productivity change? - Sector
 ```{r}
 # Grouping by Sector to Identify Trends in Productivity change
 # Check if Productivity_Change and Sector exist in the dataset
@@ -265,7 +270,7 @@ ggplot(sector_analysis, aes(x = reorder(Sector, -Average_Productivity_Change), y
 #The analysis reveals consistent productivity changes across sectors, with average values ranging narrowly from 0.496 (Retail) to 0.508 (Education). Education and IT demonstrate slightly higher productivity changes, possibly reflecting their better adaptation to shifts in work dynamics, such as remote work compatibility. Healthcare shows balanced productivity with an average of 0.500, reflecting its essential and stable operations. Retail lags behind, with the lowest average (0.496) and a median of 0, suggesting significant challenges in adjusting to external factors like COVID-19. The robust and balanced sample sizes across sectors ensure the trends are representative. Overall, Education and IT show slight outperformance, Healthcare demonstrates resilience, and Retail faces notable productivity challenges.
 ```
 
-#### Question 2:  What is the impact of working from home on productivity change? - Sector & Working from Home
+#### Question 3:  What is the impact of working from home on productivity change? - Sector & Working from Home
 ```{r}
 # Segmentation analysis: Productivity Change by Sector & Working from Home
 if (all(c("Sector", "Work_From_Home", "Productivity_Change") %in% colnames(data))) {
@@ -295,7 +300,7 @@ if (all(c("Sector", "Work_From_Home", "Productivity_Change") %in% colnames(data)
 # The analysis shows that productivity trends vary by sector and work arrangement. In Education and IT, employees working on-site exhibit slightly higher productivity, likely due to the collaborative and interactive nature of tasks in these sectors. In contrast, Healthcare and Retail benefit more from remote work, with remote employees showing higher productivity. This is particularly evident in Retail, where remote work roles (e.g., e-commerce or customer service) outperform on-site roles, which may face challenges like reduced foot traffic or operational constraints. Median productivity remains consistent across most groups, except for on-site employees in Healthcare and Retail, where it drops to 0, highlighting potential struggles in these scenarios. These findings suggest that while remote work enhances productivity in some sectors, Education and IT may benefit from hybrid models to balance collaboration and flexibility. Retail operations could focus on supporting on-site employees to mitigate productivity challenges.
 ```
 
-#### QUestion 3: Are there significant correlations between productivity_change and other numeric variables? 
+#### QUestion 4: Are there significant correlations between productivity_change and other numeric variables? 
 ```{r}
 if (all(c("Stress_Level", "Work_From_Home", "Productivity_Change") %in% colnames(data))) {
   stress_analysis <- data %>%
