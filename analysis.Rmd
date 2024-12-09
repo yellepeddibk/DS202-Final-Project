@@ -28,13 +28,17 @@ data <- read_csv("covid_impact_on_work new.csv")
 head(data)
 ```
 ## Data Cleaning
+#### Overview the Data
 ```{r}
 # Inspect the dataset
 colnames(data) # View the column names to ensure proper references
 str(data)      # Structure of the data
 summary(data)  # Summary statistics
 colSums(is.na(data)) # Check missing values
+```
 
+#### Fix Null Values, Column Names, and Data Types
+```{r}
 ## Handle missing values in Productivity_Change
 if ("Productivity_Change" %in% colnames(data)) {
   if (!is.numeric(data$Productivity_Change)) {
@@ -70,8 +74,8 @@ data_clean <- data[!duplicated(data), ]
 
 # View cleaned dataset summary
 summary(data_clean)
-
 ```
+
 ## Dataset Facts
 ```{r}
 # Size:
@@ -84,8 +88,8 @@ cat("Number of columns (variables):", dataset_size[2], "\n")
 
 ```
 
+#### Outliers:
 ```{r}
-# Outliers: 
 # Function to identify and flag outliers using the IQR method
 flag_outliers <- function(column) {
   Q1 <- quantile(column, 0.25, na.rm = TRUE)
