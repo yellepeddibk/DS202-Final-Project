@@ -127,6 +127,7 @@ if (nrow(long_data) > 0) {
 }
 ```
 
+## Analysis
 ```{r}
 # Check if required columns exist in the dataset
 if (all(c("Work_From_Home", "Productivity_Change", "Stress_Level", "Childcare_Responsibilities") %in% colnames(data))) {
