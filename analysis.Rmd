@@ -78,7 +78,7 @@ summary(data_clean)
 
 #### Question 1: What cleaning methods were applied, and why?
 ```{r}
-
+# The data cleaning process involved several key steps to ensure accuracy and consistency. Missing values in Productivity_Change were replaced with the mean, while missing values in categorical data like Work_From_Home were replaced with the mode to preserve dataset integrity. The Productivity_Change column was converted to numeric format to enable accurate calculations, and duplicates were removed to avoid over-representation. Outliers were identified using the IQR method, ensuring their impact could be assessed in the analysis. Rows with invalid or missing values in critical columns were filtered out to maintain data reliability. These steps ensured a clean dataset, enabling accurate trend analysis and clear visualizations of productivity changes across factors such as sector, work arrangements, stress levels, and childcare responsibilities.
 ```
 
 ## Dataset Facts
