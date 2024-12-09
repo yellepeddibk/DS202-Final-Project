@@ -240,17 +240,19 @@ if (all(c("Sector", "Productivity_Change") %in% colnames(data))) {
     print("Trends in Productivity Change by Sector:")
     print(sector_analysis)
     
-    # Visualize trends by sector
-    ggplot(sector_analysis, aes(x = reorder(Sector, -Average_Productivity_Change), y = Average_Productivity_Change)) +
-      geom_bar(stat = "identity", fill = "skyblue") +
-      geom_text(aes(label = round(Average_Productivity_Change, 2)), vjust = -0.5, size = 3) +
-      labs(
-        title = "Average Productivity Change by Sector",
-        x = "Sector",
-        y = "Average Productivity Change"
-      ) +
-      theme_minimal() +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1))
+ggplot(sector_analysis, aes(x = reorder(Sector, -Average_Productivity_Change), y = Average_Productivity_Change)) +
+  geom_col(fill = "skyblue", width = 0.6, color = "black") +
+  geom_text(aes(label = sprintf("%.3f", Average_Productivity_Change)), 
+            vjust = -0.5, 
+            size = 3) +
+  labs(
+    title = "Average Productivity Change by Sector",
+    x = "Sector",
+    y = "Average Productivity Change"
+  ) +
+  coord_cartesian(ylim = c(0.45, 0.55)) +  # Only display the range 0.45 to 0.55
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
   }
 } 
 #The analysis reveals consistent productivity changes across sectors, with average values ranging narrowly from 0.496 (Retail) to 0.508 (Education). Education and IT demonstrate slightly higher productivity changes, possibly reflecting their better adaptation to shifts in work dynamics, such as remote work compatibility. Healthcare shows balanced productivity with an average of 0.500, reflecting its essential and stable operations. Retail lags behind, with the lowest average (0.496) and a median of 0, suggesting significant challenges in adjusting to external factors like COVID-19. The robust and balanced sample sizes across sectors ensure the trends are representative. Overall, Education and IT show slight outperformance, Healthcare demonstrates resilience, and Retail faces notable productivity challenges.
