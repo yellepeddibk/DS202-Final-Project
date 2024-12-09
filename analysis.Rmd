@@ -414,3 +414,63 @@ if (all(c("Health_Issue", "Work_From_Home", "Productivity_Change") %in% colnames
 }
 # The analysis reveals that remote work has varying impacts on productivity depending on whether employees have health issues. For employees without health issues, those working on-site show a slightly higher average productivity change (0.506) compared to remote workers (0.501), but the difference is minimal, and both groups maintain a median productivity change of 1. In contrast, for employees with health issues, remote work appears to mitigate productivity declines. On-site employees with health issues show a lower average productivity change (0.491) and a median productivity change of 0, whereas remote employees with health issues show an average productivity change of 0.506 and a median of 1. This indicates that remote work provides a more accommodating environment for employees with health issues, helping them achieve similar productivity levels to their counterparts without health issues. Overall, the results suggest that remote work may serve as an effective strategy to support productivity for employees with health-related challenges.
 ```
+
+```{r}
+# Analyze the impact of Childcare Responsibilities, Commuting Changes, and Health Issues on Technology Adaptation Levels
+if (all(c("Childcare_Responsibilities", "Commuting_Changes", "Health_Issue", "Technology_Adaptation") %in% colnames(data))) {
+  
+  # Ensure necessary columns are numeric
+  if (!is.numeric(data$Childcare_Responsibilities)) {
+    data$Childcare_Responsibilities <- as.numeric(data$Childcare_Responsibilities)
+  }
+  if (!is.numeric(data$Commuting_Changes)) {
+    data$Commuting_Changes <- as.numeric(data$Commuting_Changes)
+  }
+  if (!is.numeric(data$Health_Issue)) {
+    data$Health_Issue <- as.numeric(data$Health_Issue)
+  }
+  if (!is.numeric(data$Technology_Adaptation)) {
+    data$Technology_Adaptation <- as.numeric(data$Technology_Adaptation)
+  }
+  
+  # Filter valid data
+  data_filtered <- data %>%
+    filter(
+      !is.na(Childcare_Responsibilities) & 
+      !is.na(Commuting_Changes) & 
+      !is.na(Health_Issue) & 
+      !is.na(Technology_Adaptation)
+    )
+  
+  # Perform grouped analysis
+  technology_adaptation_analysis <- data_filtered %>%
+    group_by(Childcare_Responsibilities, Commuting_Changes, Health_Issue) %>%
+    summarise(
+      Avg_Technology_Adaptation = mean(Technology_Adaptation, na.rm = TRUE),
+      Median_Technology_Adaptation = median(Technology_Adaptation, na.rm = TRUE),
+      Count = n(),
+      .groups = "drop"
+    )
+  
+  # Print the summary table
+  print("Impact of Childcare Responsibilities, Commuting Changes, and Health Issues on Technology Adaptation:")
+  print(technology_adaptation_analysis)
+   # Visualize the data
+  ggplot(technology_adaptation_analysis, aes(
+    x = as.factor(Childcare_Responsibilities), 
+    y = Avg_Technology_Adaptation, 
+    fill = as.factor(Commuting_Changes)
+  )) +
+    geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
+    facet_wrap(~ as.factor(Health_Issue), scales = "free") +
+    labs(
+      title = "Impact of Childcare, Commuting Changes, and Health Issues on Technology Adaptation",
+      x = "Childcare Responsibilities (0 = No, 1 = Yes)",
+      y = "Average Technology Adaptation",
+      fill = "Commuting Changes (0 = No, 1 = Yes)"
+    ) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 0, hjust = 0.5))
+}
+# Employees with childcare responsibilities consistently exhibit slightly higher technology adaptation levels, likely driven by the need to rely on technology for managing tasks at home. Reduced commuting further enhances adaptation, as employees without commuting changes tend to adapt better, likely due to increased time and energy availability. Health issues have mixed effects, with the highest adaptation observed among employees without commuting changes but with health issues (0.628), suggesting that remote work or reduced commuting can support these employees. Conversely, the lowest adaptation (0.588) is seen in employees with health issues and commuting changes, highlighting compounded challenges
+```
