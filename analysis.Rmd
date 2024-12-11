@@ -217,15 +217,17 @@ if (all(c("Work_From_Home", "Productivity_Change", "Stress_Level", "Childcare_Re
     ) +
     theme_minimal() +
     theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1), axis.title.x = element_text(size = 12))
-  
-  # Graph #2
-  ggplot(data, aes(x = Stress_Level, fill = factor(Work_From_Home))) +
-    geom_bar(position = "stack") +
-    labs(title = "Stress Level and Work From Home Status", 
-        x = "Stress Level", 
-        y = "Count of Employees") +
-    theme_minimal()
 }
+```
+
+#### Question 3: What is the impact of working from home on productivity change? - Stress Level & Working from Home - Graph #2
+```{r}
+ggplot(data, aes(x = Stress_Level, fill = factor(Work_From_Home))) +
+  geom_bar(position = "stack") +
+  labs(title = "Stress Level and Work From Home Status", 
+      x = "Stress Level", 
+      y = "Count of Employees") +
+  theme_minimal()
 ```
 
 #### Question 3:  What is the impact of working from home on productivity change? - Sector
