@@ -492,7 +492,7 @@ if (all(c("Salary_Changes", "Productivity_Change") %in% colnames(data))) {
 }
 ```
 
-#### Question 6: What was the impact of Childcare Responsibilities, Commuting Changes, and Health Issues on Technology
+#### Question 6: What was the impact of Childcare Responsibilities, Commuting Changes, and Health Issues on Technology Adaptation Levels
 ```{r}
 # Analyze the impact of Childcare Responsibilities, Commuting Changes, and Health Issues on Technology Adaptation Levels
 if (all(c("Childcare_Responsibilities", "Commuting_Changes", "Health_Issue", "Technology_Adaptation") %in% colnames(data))) {
@@ -542,7 +542,7 @@ if (all(c("Childcare_Responsibilities", "Commuting_Changes", "Health_Issue", "Te
     geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
     facet_wrap(~ as.factor(Health_Issue), scales = "free") +
     labs(
-      title = "Impact of Childcare, Commuting Changes, and Health Issues on Technology Adaptation",
+      title = "Impact of Childcare, Commuting Changes, and Health Issues on Technology",
       x = "Childcare Responsibilities (0 = No, 1 = Yes)",
       y = "Average Technology Adaptation",
       fill = "Commuting Changes (0 = No, 1 = Yes)"
