@@ -630,6 +630,32 @@ if (nrow(long_data) &gt; 0) {
 </div>
 <div id="outliers-summary-table" class="section level4">
 <h4>Outliers Summary Table:</h4>
+<pre class="r"><code>summary_stats &lt;- long_data %&gt;%
+  group_by(Variable) %&gt;%
+  summarise(
+    Mean = mean(Value, na.rm = TRUE),
+    Median = median(Value, na.rm = TRUE),
+    SD = sd(Value, na.rm = TRUE),
+    Min = min(Value, na.rm = TRUE),
+    Max = max(Value, na.rm = TRUE),
+    Num_Outliers = sum(Outlier, na.rm = TRUE),
+    Total_Count = n()
+  )
+print(summary_stats)</code></pre>
+<pre><code>## # A tibble: 11 × 8
+##    Variable               Mean Median    SD   Min   Max Num_Outliers Total_Count
+##    &lt;chr&gt;                 &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;        &lt;int&gt;       &lt;int&gt;
+##  1 Affected_by_Covid     1          1 0         1     1            0       10000
+##  2 Childcare_Responsibi… 0.397      0 0.489     0     1            0       10000
+##  3 Commuting_Changes     0.502      1 0.500     0     1            0       10000
+##  4 Health_Issue          0.301      0 0.459     0     1            0       10000
+##  5 Increased_Work_Hours  0.677      1 0.468     0     1            0       10000
+##  6 Job_Security          0.405      0 0.491     0     1            0       10000
+##  7 Productivity_Change   0.502      1 0.500     0     1            0       10000
+##  8 Salary_Changes        0.195      0 0.396     0     1         1948       10000
+##  9 Team_Collaboration_C… 0.701      1 0.458     0     1            0       10000
+## 10 Technology_Adaptation 0.605      1 0.489     0     1            0       10000
+## 11 Work_From_Home        0.803      1 0.398     0     1         1967       10000</code></pre>
 </div>
 <div id="question-2-what-is-the-distribution-of-the-productivity_change-variable" class="section level4">
 <h4>Question 2: What is the distribution of the Productivity_Change

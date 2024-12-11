@@ -136,7 +136,18 @@ if (nrow(long_data) > 0) {
 
 #### Outliers Summary Table:
 ```{r}
-
+summary_stats <- long_data %>%
+  group_by(Variable) %>%
+  summarise(
+    Mean = mean(Value, na.rm = TRUE),
+    Median = median(Value, na.rm = TRUE),
+    SD = sd(Value, na.rm = TRUE),
+    Min = min(Value, na.rm = TRUE),
+    Max = max(Value, na.rm = TRUE),
+    Num_Outliers = sum(Outlier, na.rm = TRUE),
+    Total_Count = n()
+  )
+print(summary_stats)
 ```
 
 #### Question 2: What is the distribution of the Productivity_Change Variable?
