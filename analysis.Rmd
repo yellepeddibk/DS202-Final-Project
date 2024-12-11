@@ -539,5 +539,56 @@ if (all(c("Childcare_Responsibilities", "Commuting_Changes", "Health_Issue", "Te
 # To improve our data analysis, we can collect more detailed data, such as age or job roles, to better understand patterns. We’ll handle missing data with smarter methods, like estimating based on similar cases, rather than relying on simple averages. Cleaning the data involves standardizing values and checking for overlaps between variables. Using statistical tools like regression and trend analysis, we can explore relationships and patterns over time. By grouping data meaningfully, such as by employee roles or industries, we can uncover unique insights. We’ll enhance visuals with interactive tools and comparisons to make results clearer. Combining survey feedback adds valuable context, while ensuring our data fairly represents all groups avoids bias. By applying machine learning, we can predict outcomes and pinpoint key factors. Finally, we’ll tailor recommendations to specific groups and test ideas incrementally, refining them with stakeholder feedback.
 ```
 
+```{r}
+ggplot(sector_analysis, aes(x = reorder(Sector, -Average_Productivity_Change), y = Average_Productivity_Change)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_text(aes(label = round(Average_Productivity_Change, 2)), vjust = -0.5, size = 3) +
+  labs(
+    title = "Average Productivity Change by Sector",
+    x = "Sector",
+    y = "Average Productivity Change"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
+```
+```{r}
+# For Salary Changes vs Productivity Change
+t_test_result <- t.test(salary_cut_group, stable_salary_group)
+cat("T-test Results: t-value =", t_test_result$statistic, "p-value =", t_test_result$p.value, "\n")
+```
+
+```{r}
+# Interaction analysis between Sector and Work_From_Home
+ggplot(segmentation_analysis, aes(x = Sector, y = Avg_Productivity, fill = as.factor(Work_From_Home))) +
+  geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
+  labs(
+    title = "Productivity Change by Sector and Work From Home",
+    x = "Sector",
+    y = "Average Productivity Change",
+    fill = "Work From Home (0 = No, 1 = Yes)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+# Example of a final plot - boxplot comparing productivity changes by sector
+library(ggplot2)
+ggplot(data, aes(x = Sector, y = Productivity_Change, fill = Sector)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Impact of Sector on Productivity Changes", 
+       x = "Sector", y = "Productivity Change")
+```
+
+```{r}
+ggplot(data, aes(x = Stress_Level, fill = factor(Work_From_Home))) +
+  geom_bar(position = "stack") +
+  labs(title = "Stress Level and Work From Home Status", 
+       x = "Stress Level", 
+       y = "Count of Employees") +
+  theme_minimal()
+
+```
 
