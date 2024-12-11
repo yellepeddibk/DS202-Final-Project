@@ -217,6 +217,14 @@ if (all(c("Work_From_Home", "Productivity_Change", "Stress_Level", "Childcare_Re
     ) +
     theme_minimal() +
     theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1), axis.title.x = element_text(size = 12))
+  
+  # Graph #2
+  ggplot(data, aes(x = Stress_Level, fill = factor(Work_From_Home))) +
+    geom_bar(position = "stack") +
+    labs(title = "Stress Level and Work From Home Status", 
+        x = "Stress Level", 
+        y = "Count of Employees") +
+    theme_minimal()
 }
 ```
 
@@ -527,20 +535,7 @@ if (all(c("Childcare_Responsibilities", "Commuting_Changes", "Health_Issue", "Te
 # Employees with childcare responsibilities consistently exhibit slightly higher technology adaptation levels, likely driven by the need to rely on technology for managing tasks at home. Reduced commuting further enhances adaptation, as employees without commuting changes tend to adapt better, likely due to increased time and energy availability. Health issues have mixed effects, with the highest adaptation observed among employees without commuting changes but with health issues (0.628), suggesting that remote work or reduced commuting can support these employees. Conversely, the lowest adaptation (0.588) is seen in employees with health issues and commuting changes, highlighting compounded challenges
 ```
 
-#### Question 7: What are the key takeaways or recommendations based on our analysis?
-```{r}
-# Our analysis highlights key findings: (1) Remote work supports productivity, especially for employees with health issues, while medium-stress employees see a 4.8% higher productivity boost when working remotely. (2) Education and IT sectors show the highest average productivity changes (0.508 and 0.505, respectively), whereas retail struggles at 0.496. (3) Employees with childcare responsibilities working remotely exhibit slightly lower productivity (0.501 vs. 0.504 on-site). (4) Technology adaptation is highest (0.628) among employees without commuting demands but with health issues.
-
-# Overall Conclusion/Suggestion: Organizations should adopt hybrid work models that balance flexibility and collaboration, provide targeted sector-specific support, and implement flexible schedules and health accommodations to address diverse employee needs. By prioritizing technology training and supportive policies, businesses can foster a more adaptive, resilient, and productive workforce in the evolving work landscape.
-```
-
-#### Question 8: What can we improve if this analysis were conducted again?
-```{r}
-# To improve our data analysis, we can collect more detailed data, such as age or job roles, to better understand patterns. We’ll handle missing data with smarter methods, like estimating based on similar cases, rather than relying on simple averages. Cleaning the data involves standardizing values and checking for overlaps between variables. Using statistical tools like regression and trend analysis, we can explore relationships and patterns over time. By grouping data meaningfully, such as by employee roles or industries, we can uncover unique insights. We’ll enhance visuals with interactive tools and comparisons to make results clearer. Combining survey feedback adds valuable context, while ensuring our data fairly represents all groups avoids bias. By applying machine learning, we can predict outcomes and pinpoint key factors. Finally, we’ll tailor recommendations to specific groups and test ideas incrementally, refining them with stakeholder feedback.
-```
-
-#### Question 9: Which sectors have experienced the highest and lowest average productivity changes?
-
+#### Question 7: Which sectors have experienced the highest and lowest average productivity changes?
 ```{r}
 ggplot(sector_analysis, aes(x = reorder(Sector, -Average_Productivity_Change), y = Average_Productivity_Change)) +
   geom_bar(stat = "identity", fill = "skyblue") +
@@ -552,49 +547,23 @@ ggplot(sector_analysis, aes(x = reorder(Sector, -Average_Productivity_Change), y
   ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
 ```
 
-#### Question 10: Is there a significant difference in productivity change between employees who experienced a salary cut and those with stable salaries?
+#### Question 8: Is there a significant difference in productivity change between employees who experienced a salary cut and those with stable salaries?
 ```{r}
 # For Salary Changes vs Productivity Change
 t_test_result <- t.test(salary_cut_group, stable_salary_group)
 cat("T-test Results: t-value =", t_test_result$statistic, "p-value =", t_test_result$p.value, "\n")
 ```
-#### Question 11: How does the combination of sector and work-from-home status affect average productivity change?
+
+#### Question 9: What are the key takeaways or recommendations based on our analysis?
 ```{r}
-# Interaction analysis between Sector and Work_From_Home
-ggplot(segmentation_analysis, aes(x = Sector, y = Avg_Productivity, fill = as.factor(Work_From_Home))) +
-  geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
-  labs(
-    title = "Productivity Change by Sector and Work From Home",
-    x = "Sector",
-    y = "Average Productivity Change",
-    fill = "Work From Home (0 = No, 1 = Yes)"
-  ) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+# Our analysis highlights key findings: (1) Remote work supports productivity, especially for employees with health issues, while medium-stress employees see a 4.8% higher productivity boost when working remotely. (2) Education and IT sectors show the highest average productivity changes (0.508 and 0.505, respectively), whereas retail struggles at 0.496. (3) Employees with childcare responsibilities working remotely exhibit slightly lower productivity (0.501 vs. 0.504 on-site). (4) Technology adaptation is highest (0.628) among employees without commuting demands but with health issues.
+
+# Overall Conclusion/Suggestion: Organizations should adopt hybrid work models that balance flexibility and collaboration, provide targeted sector-specific support, and implement flexible schedules and health accommodations to address diverse employee needs. By prioritizing technology training and supportive policies, businesses can foster a more adaptive, resilient, and productive workforce in the evolving work landscape.
 ```
 
-#### Question 12: How does productivity change vary across different sectors?
+#### Question 10: What can we improve if this analysis were conducted again?
 ```{r}
-# Example of a final plot - boxplot comparing productivity changes by sector
-library(ggplot2)
-ggplot(data, aes(x = Sector, y = Productivity_Change, fill = Sector)) +
-  geom_boxplot() +
-  theme_minimal() +
-  labs(title = "Impact of Sector on Productivity Changes", 
-       x = "Sector", y = "Productivity Change")
+# To improve our data analysis, we can collect more detailed data, such as age or job roles, to better understand patterns. We’ll handle missing data with smarter methods, like estimating based on similar cases, rather than relying on simple averages. Cleaning the data involves standardizing values and checking for overlaps between variables. Using statistical tools like regression and trend analysis, we can explore relationships and patterns over time. By grouping data meaningfully, such as by employee roles or industries, we can uncover unique insights. We’ll enhance visuals with interactive tools and comparisons to make results clearer. Combining survey feedback adds valuable context, while ensuring our data fairly represents all groups avoids bias. By applying machine learning, we can predict outcomes and pinpoint key factors. Finally, we’ll tailor recommendations to specific groups and test ideas incrementally, refining them with stakeholder feedback.
 ```
-
-#### Question 13: What is the distribution of stress levels for employees who work from home versus those who don't?
-```{r}
-ggplot(data, aes(x = Stress_Level, fill = factor(Work_From_Home))) +
-  geom_bar(position = "stack") +
-  labs(title = "Stress Level and Work From Home Status", 
-       x = "Stress Level", 
-       y = "Count of Employees") +
-  theme_minimal()
-
-```
-
