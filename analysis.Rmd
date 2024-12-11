@@ -492,7 +492,7 @@ if (all(c("Salary_Changes", "Productivity_Change") %in% colnames(data))) {
 }
 ```
 
-#### Question 6: What was the impact of Childcare Responsibilities, Commuting Changes, and Health Issues on Technology Adaptation Levels
+#### Question 6: What was the impact of Childcare Responsibilities, Commuting Changes, and Health Issues on Technology
 ```{r}
 # Analyze the impact of Childcare Responsibilities, Commuting Changes, and Health Issues on Technology Adaptation Levels
 if (all(c("Childcare_Responsibilities", "Commuting_Changes", "Health_Issue", "Technology_Adaptation") %in% colnames(data))) {
