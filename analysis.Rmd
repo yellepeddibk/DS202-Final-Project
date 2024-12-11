@@ -539,6 +539,8 @@ if (all(c("Childcare_Responsibilities", "Commuting_Changes", "Health_Issue", "Te
 # To improve our data analysis, we can collect more detailed data, such as age or job roles, to better understand patterns. We’ll handle missing data with smarter methods, like estimating based on similar cases, rather than relying on simple averages. Cleaning the data involves standardizing values and checking for overlaps between variables. Using statistical tools like regression and trend analysis, we can explore relationships and patterns over time. By grouping data meaningfully, such as by employee roles or industries, we can uncover unique insights. We’ll enhance visuals with interactive tools and comparisons to make results clearer. Combining survey feedback adds valuable context, while ensuring our data fairly represents all groups avoids bias. By applying machine learning, we can predict outcomes and pinpoint key factors. Finally, we’ll tailor recommendations to specific groups and test ideas incrementally, refining them with stakeholder feedback.
 ```
 
+#### Question 9: Which sectors have experienced the highest and lowest average productivity changes?
+
 ```{r}
 ggplot(sector_analysis, aes(x = reorder(Sector, -Average_Productivity_Change), y = Average_Productivity_Change)) +
   geom_bar(stat = "identity", fill = "skyblue") +
@@ -552,12 +554,14 @@ ggplot(sector_analysis, aes(x = reorder(Sector, -Average_Productivity_Change), y
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
+
+#### Question 10: Is there a significant difference in productivity change between employees who experienced a salary cut and those with stable salaries?
 ```{r}
 # For Salary Changes vs Productivity Change
 t_test_result <- t.test(salary_cut_group, stable_salary_group)
 cat("T-test Results: t-value =", t_test_result$statistic, "p-value =", t_test_result$p.value, "\n")
 ```
-
+#### Question 11: How does the combination of sector and work-from-home status affect average productivity change?
 ```{r}
 # Interaction analysis between Sector and Work_From_Home
 ggplot(segmentation_analysis, aes(x = Sector, y = Avg_Productivity, fill = as.factor(Work_From_Home))) +
@@ -572,6 +576,7 @@ ggplot(segmentation_analysis, aes(x = Sector, y = Avg_Productivity, fill = as.fa
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+#### Question 12: How does productivity change vary across different sectors?
 ```{r}
 # Example of a final plot - boxplot comparing productivity changes by sector
 library(ggplot2)
@@ -582,6 +587,7 @@ ggplot(data, aes(x = Sector, y = Productivity_Change, fill = Sector)) +
        x = "Sector", y = "Productivity Change")
 ```
 
+#### Question 13: What is the distribution of stress levels for employees who work from home versus those who don't?
 ```{r}
 ggplot(data, aes(x = Stress_Level, fill = factor(Work_From_Home))) +
   geom_bar(position = "stack") +
