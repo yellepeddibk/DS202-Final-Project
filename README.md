@@ -45,7 +45,7 @@ To achieve this objective, we will explore the following questions:
 
 8.  What can we improve if this analysis were conducted again?
 
-These are the primary questuons we seek to answer in this final project.
+These are the primary questions we seek to answer in this final project.
 From the information drawn from these questions, we will be able to
 derive meaningful insights on the best practices to use during Pandmeics
 and better understand how to prepare for them.
@@ -225,12 +225,63 @@ colSums(is.na(data)) # Check missing values
     ##             Affected_by_Covid 
     ##                             0
 
+As shown here, all the columns have a 0 for null values, which means
+that there are no empty values in any column. This means that we will
+not have to worry about accounting for null values during the data
+cleaning process.
+
 ### Variables
+
+- Stress_Level: Indicates the employee’s stress level, categorized into
+  levels such as low, moderate, or high.
+
+- Sector: Specifies the industry or sector (e.g., Retail, IT) in which
+  the employee works.
+
+- Increased_Work_Hours: A binary variable (1/0) indicating whether the
+  employee experienced an increase in work hours.
+
+- Work_From_Home: A binary variable (1/0) showing whether the employee
+  is working from home.
+
+- Hours_Worked_Per_Day: Captures the number of hours the employee works
+  in a day, though the values in the sample data need cleaning.
+
+- Meetings_Per_Day: Represents the number of meetings the employee
+  attends per day, though concatenated values in the sample require
+  cleaning.
+
+- Productivity_Change: A binary variable (1/0) indicating whether the
+  employee experienced a change in productivity.
+
+- Health_Issue: A binary variable (1/0) denoting whether the employee
+  reported any health issues.
+
+- Job_Security: A binary variable (1/0) indicating whether the employee
+  feels secure in their job.
+
+- Childcare_Responsibilities: A binary variable (1/0) indicating if the
+  employee has childcare responsibilities.
+
+- Commuting_Changes: A binary variable (1/0) showing whether the
+  employee’s commute has changed.
+
+- Technology_Adaptation: A binary variable (1/0) indicating if the
+  employee had to adapt to new technology for work.
+
+- Salary_Changes: A binary variable (1/0) representing whether the
+  employee’s salary changed.
+
+- Team_Collaboration_Challenges: A binary variable (1/0) indicating if
+  the employee faced challenges collaborating with their team.
+
+- Affected_by_Covid: A binary variable (1/0) specifying whether the
+  employee’s work or life has been impacted by COVID-19.
 
 Although we use most of these variables througout this analysis, our
 variables of focus are going to be the “Productivity_Change” and
 “Stress_Level” since these variables will tell us how society is doing
-as a whole.
+as a whole as they reflect the state of the people.
 
 ## Results
 
