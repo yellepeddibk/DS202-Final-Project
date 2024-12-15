@@ -227,7 +227,7 @@ if (all(c("Work_From_Home", "Productivity_Change", "Stress_Level", "Childcare_Re
     geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
     facet_wrap(~ Childcare_Responsibilities, scales = "free") +
     labs(
-      title = "Impact of Working From Home on Productivity Change by Stress Level and Childcare Responsibilities",
+      title = "Impact of Working From Home on Productivity Change by Stress Level",
       x = "Stress Level",
       y = "Average Productivity Change",
       fill = "Work From Home (0 = No, 1 = Yes)"
