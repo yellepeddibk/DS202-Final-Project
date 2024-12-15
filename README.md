@@ -60,7 +60,7 @@ and better understand how to prepare for them.
 
     Where normally graphs depict the amount of change a variable has had, binary-based variables will depict whether or not there was any change and how much of the data has changed. When it comes to this project specifically, this is actually a valid approach as all we need to see is what variables changed in response to COVID-19. The variables that had less change indicate that they are more resilient and are of less worry, whereas the variables that have a higher proportion of change are the ones that indicate the need for more caution and preparation.
 
-    With that said, we now move on to viewing the Dataset and its structure:
+    With that said, we now move on to viewing the dataset and gaining an overall synopsis of what to expect:
 
 ``` r
 # View the data 
@@ -85,7 +85,7 @@ head(data)
 
 #### Overview the Data
 
-First, we took an overview of the Data to see what aspects needed
+First, we will take an overview of the Data to see what aspects needed
 cleaning.
 
 ``` r
