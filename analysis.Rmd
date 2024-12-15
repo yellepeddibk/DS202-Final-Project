@@ -227,7 +227,7 @@ ggplot(data, aes(x = Stress_Level, fill = factor(Work_From_Home))) +
   theme_minimal()
 ```
 
-#### Question 3:  What is the impact of working from home on productivity change? - Sector
+#### Question 3: What is the impact of working from home on productivity change? - Sector
 ```{r}
 # Grouping by Sector to Identify Trends in Productivity change
 # Check if Productivity_Change and Sector exist in the dataset
@@ -267,7 +267,7 @@ ggplot(sector_analysis, aes(x = reorder(Sector, -Average_Productivity_Change), y
     x = "Sector",
     y = "Average Productivity Change"
   ) +
-  coord_cartesian(ylim = c(0.45, 0.55)) +  # Only display the range 0.45 to 0.55
+  coord_cartesian(ylim = c(1.45, 1.55)) +  # Only display the range 1.45 to 0.55
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
   }
