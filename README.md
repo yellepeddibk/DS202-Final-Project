@@ -286,3 +286,8 @@ as a whole as they reflect the state of the people.
 ## Results
 
 ## Conclusion
+
+In conclusion, our analysis on the impact that COVID had on people’s
+work lives has revealed how well prepared and un-prepared society is for
+pandemic-like events. We have also confirmed what works best and what
+doesn’t when attempting to adapt to such events.
