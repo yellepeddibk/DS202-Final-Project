@@ -60,7 +60,148 @@ and better understand how to prepare for them.
 
     Where normally graphs depict the amount of change a variable has had, binary-based variables will depict whether or not there was any change and how much of the data has changed. When it comes to this project specifically, this is actually a valid approach as all we need to see is what variables changed in response to COVID-19. The variables that had less change indicate that they are more resilient and are of less worry, whereas the variables that have a higher proportion of change are the ones that indicate the need for more caution and preparation.
 
+    With that said, we now move on to viewing the Dataset and its structure:
+
+``` r
+# View the data 
+head(data)
+```
+
+    ## # A tibble: 6 × 15
+    ##   Stress_Level Sector   Increased_Work_Hours Work_From_Home Hours_Worked_Per_Day
+    ##   <chr>        <chr>                   <dbl>          <dbl> <chr>               
+    ## 1 Low          Retail                      1              1 6.392.393.639.805.8…
+    ## 2 Low          IT                          1              1 9.171.983.537.957.5…
+    ## 3 Medium       Retail                      1              0 10.612.560.951.456.…
+    ## 4 Medium       Educati…                    1              1 5.546.168.647.409.5…
+    ## 5 Medium       Educati…                    0              1 11.424.615.456.733.…
+    ## 6 Low          IT                          1              1 7.742.897.931.229.7…
+    ## # ℹ 10 more variables: Meetings_Per_Day <chr>, Productivity_Change <dbl>,
+    ## #   Health_Issue <dbl>, Job_Security <dbl>, Childcare_Responsibilities <dbl>,
+    ## #   Commuting_Changes <dbl>, Technology_Adaptation <dbl>, Salary_Changes <dbl>,
+    ## #   Team_Collaboration_Challenges <dbl>, Affected_by_Covid <dbl>
+
 ### Cleaning
+
+#### Overview the Data
+
+First, we took an overview of the Data to see what aspects needed
+cleaning.
+
+``` r
+# Inspect the dataset
+colnames(data) # View the column names to ensure proper references
+```
+
+    ##  [1] "Stress_Level"                  "Sector"                       
+    ##  [3] "Increased_Work_Hours"          "Work_From_Home"               
+    ##  [5] "Hours_Worked_Per_Day"          "Meetings_Per_Day"             
+    ##  [7] "Productivity_Change"           "Health_Issue"                 
+    ##  [9] "Job_Security"                  "Childcare_Responsibilities"   
+    ## [11] "Commuting_Changes"             "Technology_Adaptation"        
+    ## [13] "Salary_Changes"                "Team_Collaboration_Challenges"
+    ## [15] "Affected_by_Covid"
+
+``` r
+str(data)      # Structure of the data
+```
+
+    ## spc_tbl_ [10,000 × 15] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+    ##  $ Stress_Level                 : chr [1:10000] "Low" "Low" "Medium" "Medium" ...
+    ##  $ Sector                       : chr [1:10000] "Retail" "IT" "Retail" "Education" ...
+    ##  $ Increased_Work_Hours         : num [1:10000] 1 1 1 1 0 1 0 1 1 1 ...
+    ##  $ Work_From_Home               : num [1:10000] 1 1 0 1 1 1 0 1 1 1 ...
+    ##  $ Hours_Worked_Per_Day         : chr [1:10000] "6.392.393.639.805.820" "9.171.983.537.957.560" "10.612.560.951.456.400" "5.546.168.647.409.510" ...
+    ##  $ Meetings_Per_Day             : chr [1:10000] "26.845.944.014.488.700" "33.392.245.834.602.800" "2.218.332.712.302.110" "5.150.566.193.312.910" ...
+    ##  $ Productivity_Change          : num [1:10000] 1 1 0 0 1 1 0 0 0 0 ...
+    ##  $ Health_Issue                 : num [1:10000] 0 0 0 0 0 1 0 1 1 1 ...
+    ##  $ Job_Security                 : num [1:10000] 0 1 0 0 1 0 0 0 1 0 ...
+    ##  $ Childcare_Responsibilities   : num [1:10000] 1 0 0 0 1 1 1 0 0 1 ...
+    ##  $ Commuting_Changes            : num [1:10000] 1 1 0 1 1 1 0 1 0 1 ...
+    ##  $ Technology_Adaptation        : num [1:10000] 1 1 0 0 0 1 1 1 0 1 ...
+    ##  $ Salary_Changes               : num [1:10000] 0 0 0 0 1 0 0 0 0 0 ...
+    ##  $ Team_Collaboration_Challenges: num [1:10000] 1 1 0 0 1 1 1 1 1 1 ...
+    ##  $ Affected_by_Covid            : num [1:10000] 1 1 1 1 1 1 1 1 1 1 ...
+    ##  - attr(*, "spec")=
+    ##   .. cols(
+    ##   ..   Stress_Level = col_character(),
+    ##   ..   Sector = col_character(),
+    ##   ..   Increased_Work_Hours = col_double(),
+    ##   ..   Work_From_Home = col_double(),
+    ##   ..   Hours_Worked_Per_Day = col_character(),
+    ##   ..   Meetings_Per_Day = col_character(),
+    ##   ..   Productivity_Change = col_double(),
+    ##   ..   Health_Issue = col_double(),
+    ##   ..   Job_Security = col_double(),
+    ##   ..   Childcare_Responsibilities = col_double(),
+    ##   ..   Commuting_Changes = col_double(),
+    ##   ..   Technology_Adaptation = col_double(),
+    ##   ..   Salary_Changes = col_double(),
+    ##   ..   Team_Collaboration_Challenges = col_double(),
+    ##   ..   Affected_by_Covid = col_double()
+    ##   .. )
+    ##  - attr(*, "problems")=<externalptr>
+
+``` r
+summary(data)  # Summary statistics
+```
+
+    ##  Stress_Level          Sector          Increased_Work_Hours Work_From_Home  
+    ##  Length:10000       Length:10000       Min.   :0.0000       Min.   :0.0000  
+    ##  Class :character   Class :character   1st Qu.:0.0000       1st Qu.:1.0000  
+    ##  Mode  :character   Mode  :character   Median :1.0000       Median :1.0000  
+    ##                                        Mean   :0.6769       Mean   :0.8033  
+    ##                                        3rd Qu.:1.0000       3rd Qu.:1.0000  
+    ##                                        Max.   :1.0000       Max.   :1.0000  
+    ##  Hours_Worked_Per_Day Meetings_Per_Day   Productivity_Change  Health_Issue   
+    ##  Length:10000         Length:10000       Min.   :0.0000      Min.   :0.0000  
+    ##  Class :character     Class :character   1st Qu.:0.0000      1st Qu.:0.0000  
+    ##  Mode  :character     Mode  :character   Median :1.0000      Median :0.0000  
+    ##                                          Mean   :0.5022      Mean   :0.3011  
+    ##                                          3rd Qu.:1.0000      3rd Qu.:1.0000  
+    ##                                          Max.   :1.0000      Max.   :1.0000  
+    ##   Job_Security    Childcare_Responsibilities Commuting_Changes
+    ##  Min.   :0.0000   Min.   :0.0000             Min.   :0.0000   
+    ##  1st Qu.:0.0000   1st Qu.:0.0000             1st Qu.:0.0000   
+    ##  Median :0.0000   Median :0.0000             Median :1.0000   
+    ##  Mean   :0.4049   Mean   :0.3967             Mean   :0.5022   
+    ##  3rd Qu.:1.0000   3rd Qu.:1.0000             3rd Qu.:1.0000   
+    ##  Max.   :1.0000   Max.   :1.0000             Max.   :1.0000   
+    ##  Technology_Adaptation Salary_Changes   Team_Collaboration_Challenges
+    ##  Min.   :0.0000        Min.   :0.0000   Min.   :0.0000               
+    ##  1st Qu.:0.0000        1st Qu.:0.0000   1st Qu.:0.0000               
+    ##  Median :1.0000        Median :0.0000   Median :1.0000               
+    ##  Mean   :0.6051        Mean   :0.1948   Mean   :0.7006               
+    ##  3rd Qu.:1.0000        3rd Qu.:0.0000   3rd Qu.:1.0000               
+    ##  Max.   :1.0000        Max.   :1.0000   Max.   :1.0000               
+    ##  Affected_by_Covid
+    ##  Min.   :1        
+    ##  1st Qu.:1        
+    ##  Median :1        
+    ##  Mean   :1        
+    ##  3rd Qu.:1        
+    ##  Max.   :1
+
+``` r
+colSums(is.na(data)) # Check missing values
+```
+
+    ##                  Stress_Level                        Sector 
+    ##                             0                             0 
+    ##          Increased_Work_Hours                Work_From_Home 
+    ##                             0                             0 
+    ##          Hours_Worked_Per_Day              Meetings_Per_Day 
+    ##                             0                             0 
+    ##           Productivity_Change                  Health_Issue 
+    ##                             0                             0 
+    ##                  Job_Security    Childcare_Responsibilities 
+    ##                             0                             0 
+    ##             Commuting_Changes         Technology_Adaptation 
+    ##                             0                             0 
+    ##                Salary_Changes Team_Collaboration_Challenges 
+    ##                             0                             0 
+    ##             Affected_by_Covid 
+    ##                             0
 
 ### Variables
 
