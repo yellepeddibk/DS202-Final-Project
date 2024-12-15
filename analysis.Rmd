@@ -327,42 +327,59 @@ if (all(c("Sector", "Work_From_Home", "Productivity_Change") %in% colnames(data)
   print(plot_work_from_home)
   print(plot_not_work_from_home)
 }
-
 # The analysis shows that productivity trends vary by sector and work arrangement. In Education and IT, employees working on-site exhibit slightly higher productivity, likely due to the collaborative and interactive nature of tasks in these sectors. In contrast, Healthcare and Retail benefit more from remote work, with remote employees showing higher productivity. This is particularly evident in Retail, where remote work roles (e.g., e-commerce or customer service) outperform on-site roles, which may face challenges like reduced foot traffic or operational constraints. Median productivity remains consistent across most groups, except for on-site employees in Healthcare and Retail, where it drops to 0, highlighting potential struggles in these scenarios. These findings suggest that while remote work enhances productivity in some sectors, Education and IT may benefit from hybrid models to balance collaboration and flexibility. Retail operations could focus on supporting on-site employees to mitigate productivity challenges.
 ```
 
 #### Question 3:  What is the impact of working from home on productivity change? - Childcare Responsibilities & Working from Home
 ```{r}
 if (all(c("Childcare_Responsibilities", "Work_From_Home", "Productivity_Change") %in% colnames(data))) {
+  # Perform analysis: Group by Work_From_Home and Childcare_Responsibilities
   childcare_analysis <- data %>%
+    filter(Productivity_Change == 1) %>%  # Filter only individuals affected by productivity change
     group_by(Work_From_Home, Childcare_Responsibilities) %>%
     summarise(
-      Avg_Productivity = mean(Productivity_Change, na.rm = TRUE),
-      Median_Productivity = median(Productivity_Change, na.rm = TRUE),
-      Count = n(),
+      Count = n(),  # Count the number of individuals
       .groups = "drop"
     )
   
   print("Impact of Childcare Responsibilities on Productivity by Work From Home Status")
   print(childcare_analysis)
-  # Create a graph to visualize the analysis
-   # Create a graph to visualize the analysis
-  ggplot(childcare_analysis, aes(x = as.factor(Childcare_Responsibilities), y = Avg_Productivity, fill = as.factor(Work_From_Home))) +
-    geom_bar(stat = "identity", position = position_dodge(width = 0.6), width = 0.5, alpha = 0.8) +
-    geom_text(aes(label = round(Avg_Productivity, 3)), 
-              position = position_dodge(width = 0.6), 
-              vjust = -0.5, 
-              size = 3) +
+  
+  # Split data into two subsets: Work From Home (1) and Not Work From Home (0)
+  work_from_home <- childcare_analysis %>% filter(Work_From_Home == 1)
+  not_work_from_home <- childcare_analysis %>% filter(Work_From_Home == 0)
+  
+  # Plot: Work From Home
+  plot_work_from_home <- ggplot(work_from_home, aes(x = as.factor(Childcare_Responsibilities), y = Count, fill = as.factor(Childcare_Responsibilities))) +
+    geom_bar(stat = "identity", width = 0.5, color = "black", alpha = 0.8) +
+    geom_text(aes(label = Count), vjust = -0.5, size = 3) +
     labs(
-      title = "Impact of Childcare Responsibilities on Productivity by Work From Home Status",
+      title = "Number of Individuals Affected by Productivity Change (Work From Home)",
       x = "Childcare Responsibilities (0 = No, 1 = Yes)",
-      y = "Average Productivity Change",
-      fill = "Work From Home (0 = No, 1 = Yes)"
+      y = "Number of Individuals",
+      fill = "Childcare Responsibilities"
     ) +
-    coord_cartesian(ylim = c(0.45, 0.55)) +  # Display only from 0.45 to 0.55
     theme_minimal() +
     theme(axis.text.x = element_text(size = 10, angle = 0, hjust = 0.5))
+  
+  # Plot: Not Working From Home
+  plot_not_work_from_home <- ggplot(not_work_from_home, aes(x = as.factor(Childcare_Responsibilities), y = Count, fill = as.factor(Childcare_Responsibilities))) +
+    geom_bar(stat = "identity", width = 0.5, color = "black", alpha = 0.8) +
+    geom_text(aes(label = Count), vjust = -0.5, size = 3) +
+    labs(
+      title = "Number of Individuals Affected by Productivity Change (Not Working From Home)",
+      x = "Childcare Responsibilities (0 = No, 1 = Yes)",
+      y = "Number of Individuals",
+      fill = "Childcare Responsibilities"
+    ) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(size = 10, angle = 0, hjust = 0.5))
+  
+  # Display the plots
+  print(plot_work_from_home)
+  print(plot_not_work_from_home)
 }
+
 #The analysis shows that employees without childcare responsibilities generally benefit slightly from remote work, with higher average productivity (0.503) compared to those working on-site (0.500). In contrast, employees with childcare responsibilities show slightly lower productivity when working from home (0.501) compared to those not working from home (0.504), likely due to competing demands at home. Median productivity remains consistent across groups, with those managing childcare responsibilities showing a median value of 1 regardless of work arrangement, suggesting that childcare responsibilities do not drastically impact productivity for most employees. Overall, remote work appears more beneficial for employees without childcare responsibilities, while those with childcare may need additional support to balance their responsibilities effectively.
 ```
 
