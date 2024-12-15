@@ -153,41 +153,22 @@ print(summary_stats)
 
 #### Question 2: What is the distribution of the Productivity_Change Variable?
 ```{r}
-# Check if Productivity_Change exists in the dataset
-if ("Productivity_Change" %in% colnames(data)) {
-  
-  # Ensure Productivity_Change is numeric
-  if (!is.numeric(data$Productivity_Change)) {
-    data$Productivity_Change <- as.numeric(data$Productivity_Change)
-  }
-  
-  # Replace missing values with the mean
-  data$Productivity_Change[is.na(data$Productivity_Change)] <- mean(data$Productivity_Change, na.rm = TRUE)
-  
-  # Calculate and display summary statistics
-  summary_stats <- data %>%
-    summarise(
-      Mean = mean(Productivity_Change),
-      Median = median(Productivity_Change),
-      Standard_Deviation = sd(Productivity_Change),
-      Minimum = min(Productivity_Change),
-      Maximum = max(Productivity_Change)
-    )
-  
-  print("Summary Statistics for Productivity_Change:")
-  print(summary_stats)
-  
-  # Visualize the distribution with a histogram and density plot
-  ggplot(data, aes(x = Productivity_Change)) +
-    geom_histogram(aes(y = after_stat(density)), bins = 30, fill = "blue", alpha = 0.7, color = "black") +
-    geom_density(color = "red", linewidth = 1) +  # Updated for ggplot2 v3.4.0+
-    labs(
-      title = "Distribution of Productivity_Change",
-      x = "Productivity Change",
-      y = "Density"
-    ) +
-    theme_minimal()
-}
+# Convert Productivity_Change to a factor
+data$Productivity_Change <- factor(data$Productivity_Change, 
+                                   levels = c(0, 1),
+                                   labels = c("No Change", "Change"))
+
+ggplot(data, aes(x = Productivity_Change)) +
+  geom_bar(fill = "steelblue", color = "black", width = 0.5) +  # Narrow bars
+  geom_text(stat = "count", aes(label = ..count..), 
+            vjust = -0.5, size = 4) +  # Add counts on top of bars
+  coord_cartesian(ylim = c(4950, 5050)) +  # Zoom in on y-axis
+  labs(
+    title = "Distribution of Productivity Change",
+    x = "Productivity Change",
+    y = "Count"
+  ) +
+  theme_minimal()
 ```
 
 ## Analysis
@@ -227,7 +208,7 @@ if (all(c("Work_From_Home", "Productivity_Change", "Stress_Level", "Childcare_Re
     geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
     facet_wrap(~ Childcare_Responsibilities, scales = "free") +
     labs(
-      title = "Impact of Working From Home on Productivity Change by Stress Level",
+      title = "Productivity Change by Stress Level and Childcare",
       x = "Stress Level",
       y = "Average Productivity Change",
       fill = "Work From Home (0 = No, 1 = Yes)"
@@ -247,7 +228,7 @@ ggplot(data, aes(x = Stress_Level, fill = factor(Work_From_Home))) +
   theme_minimal()
 ```
 
-#### Question 3:  What is the impact of working from home on productivity change? - Sector
+#### Question 3: What is the impact of working from home on productivity change? - Sector
 ```{r}
 # Grouping by Sector to Identify Trends in Productivity change
 # Check if Productivity_Change and Sector exist in the dataset
@@ -287,7 +268,7 @@ ggplot(sector_analysis, aes(x = reorder(Sector, -Average_Productivity_Change), y
     x = "Sector",
     y = "Average Productivity Change"
   ) +
-  coord_cartesian(ylim = c(0.45, 0.55)) +  # Only display the range 0.45 to 0.55
+  coord_cartesian(ylim = c(1.45, 1.55)) +  # Only display the range 1.45 to 0.55
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
   }
@@ -543,7 +524,7 @@ if (all(c("Childcare_Responsibilities", "Commuting_Changes", "Health_Issue", "Te
     geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
     facet_wrap(~ as.factor(Health_Issue), scales = "free") +
     labs(
-      title = "Impact of Childcare, Commuting Changes, and Health Issues on Technology Adaptation",
+      title = "Impact of Childcare, Commuting Changes, and Health Issues on Technology",
       x = "Childcare Responsibilities (0 = No, 1 = Yes)",
       y = "Average Technology Adaptation",
       fill = "Commuting Changes (0 = No, 1 = Yes)"
