@@ -277,30 +277,53 @@ ggplot(sector_analysis, aes(x = reorder(Sector, -Average_Productivity_Change), y
 
 #### Question 3:  What is the impact of working from home on productivity change? - Sector & Working from Home
 ```{r}
-# Segmentation analysis: Productivity Change by Sector & Working from Home
+# Segmentation analysis: Count of Productivity Change by Sector & Work From Home
 if (all(c("Sector", "Work_From_Home", "Productivity_Change") %in% colnames(data))) {
+
+# Group data by Sector and Work_From_Home
   segmentation_analysis <- data %>%
+    filter(Productivity_Change == 1) %>%  # Only include individuals with productivity change
     group_by(Sector, Work_From_Home) %>%
     summarise(
-      Avg_Productivity = mean(Productivity_Change, na.rm = TRUE),
-      Median_Productivity = median(Productivity_Change, na.rm = TRUE),
-      Count = n()
+      Count = n(),  # Count the number of individuals with a change
+      .groups = "drop"
     )
-  
-  print("Segmentation Analysis: Productivity Change by Sector and Work From Home")
+
+  print("Segmentation Analysis: Number of Individuals with Productivity Change by Sector and Work From Home")
   print(segmentation_analysis)
-  
-  # Visualize segmentation
-  ggplot(segmentation_analysis, aes(x = Sector, y = Avg_Productivity, fill = as.factor(Work_From_Home))) +
-    geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
+# Split the data into two subsets: Work From Home (1) and Not Work From Home (0)
+  work_from_home <- segmentation_analysis %>% filter(Work_From_Home == 1)
+  not_work_from_home <- segmentation_analysis %>% filter(Work_From_Home == 0)
+
+# Plot: Number of Individuals (Work From Home) - Zoom in to 950-1050
+  plot_work_from_home <- ggplot(work_from_home, aes(x = Sector, y = Count, fill = Sector)) +
+    geom_col(width = 0.6, color = "black") +
+    geom_text(aes(label = Count), vjust = -0.5, size = 3) +
+    coord_cartesian(ylim = c(950, 1050)) +  # Zoom in on y-axis for 950-1050
     labs(
-      title = "Average Productivity Change by Sector and Work From Home",
+      title = "Number of Individuals with Productivity Change (Work From Home)",
       x = "Sector",
-      y = "Average Productivity Change",
-      fill = "Work From Home (0 = No, 1 = Yes)"
+      y = "Number of Individuals"
     ) +
     theme_minimal() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Plot: Number of Individuals (Not Working From Home) - Zoom in to 200-300
+  plot_not_work_from_home <- ggplot(not_work_from_home, aes(x = Sector, y = Count, fill = Sector)) +
+    geom_col(width = 0.6, color = "black") +
+    geom_text(aes(label = Count), vjust = -0.5, size = 3) +
+    coord_cartesian(ylim = c(200, 300)) +  # Zoom in on y-axis for 200-300
+    labs(
+      title = "Number of Individuals with Productivity Change (Not Working From Home)",
+      x = "Sector",
+      y = "Number of Individuals"
+    ) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Display the plots
+  print(plot_work_from_home)
+  print(plot_not_work_from_home)
 }
 # The analysis shows that productivity trends vary by sector and work arrangement. In Education and IT, employees working on-site exhibit slightly higher productivity, likely due to the collaborative and interactive nature of tasks in these sectors. In contrast, Healthcare and Retail benefit more from remote work, with remote employees showing higher productivity. This is particularly evident in Retail, where remote work roles (e.g., e-commerce or customer service) outperform on-site roles, which may face challenges like reduced foot traffic or operational constraints. Median productivity remains consistent across most groups, except for on-site employees in Healthcare and Retail, where it drops to 0, highlighting potential struggles in these scenarios. These findings suggest that while remote work enhances productivity in some sectors, Education and IT may benefit from hybrid models to balance collaboration and flexibility. Retail operations could focus on supporting on-site employees to mitigate productivity challenges.
 ```
