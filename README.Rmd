@@ -42,7 +42,7 @@ These are the primary questuons we seek to answer in this final project. From th
 
 ## Data
 ### Structure
-    The link to the data set is the following: . The Kaggle website constains a CSV file containing all the data collected to detail the impact COVID had on people's work lives. There are 15 columns for 15 variables, where each variable describes a different aspect of work and whether or not it has had any change or effect from COVID. All of the data-points are neatly organized into one CSV file, where there are exactly 10,000 rows.
+    The link to the data set is the following: https://www.kaggle.com/datasets/willianoliveiragibin/covid-19-on-working-professionals/data. The Kaggle website constains a CSV file containing all the data collected to detail the impact COVID had on people's work lives. There are 15 columns for 15 variables, where each variable describes a different aspect of work and whether or not it has had any change or effect from COVID. All of the data-points are neatly organized into one CSV file, where there are exactly 10,000 rows.
 
     One of the most important things to note about this dataset is that fact that most of the variables report their data in a binary format. In other words, most of the data is listed in 0's and 1's, where 0 conveys that the given data-point has not been effected or changed for its given variable/column while 1 conveys that it has. Although this may seem subtle, this has lead to a variety of issues and mis-interpretations throughout this project, which have been since fixed of course. 
 
@@ -70,17 +70,25 @@ head(data)
 #### Overview the Data
 First, we will take an overview of the Data to see what aspects needed cleaning.
 ```{r}
-# Inspect the dataset
 colnames(data) # View the column names to ensure proper references
+```
+As shown, there are 15 variables/columns.
+```{r}
 str(data)      # Structure of the data
+```
+This code snippet reveals the structure of the Dataset. Some key things to note are that the binary variables are all listed as numeric data types while the rest are character data types.
+```{r}
 summary(data)  # Summary statistics
+```
+The summary statistics tells us quite a few things. One of the key pieces of information to take away is the proportion of data-points that were effected by their respective variables. This mainly applies to the binary/numeric variable types as the character types simply list that they are characters. The binary types, on the other hand, show their mean values, which represents the proportion of data that was effected in their column. For example, the "Job_Security" column lists a 0.4049 value for the mean, which means that around 40% of the people in the data set experinced and impact or change to their job securities during the impact. This indicates that job securtity was more stable than not for the average person during the pandemic. In contrast, "Team_Collaboration_Challenges" lists a mean value of 0.7006, meaning that 70% of people in the dataset experinced team collaboration challenges, indicating that this aspect is vulnerable to Pandmeic-like events. Overall, this information alone provides valuable insights and can allow society to better prepare for future events.
+```{r}
 colSums(is.na(data)) # Check missing values
 ```
 
 
 ### Variables
 
-
+Although we use most of these variables througout this analysis, our variables of focus are going to be the "Productivity_Change" and "Stress_Level" since these variables will tell us how society is doing as a whole.
 
 ## Results
 

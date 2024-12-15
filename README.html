@@ -651,7 +651,7 @@ able to derive meaningful insights on the best practices to use during
 Pandmeics and better understand how to prepare for them.</p>
 <h2 id="data">Data</h2>
 <h3 id="structure">Structure</h3>
-<pre><code>The link to the data set is the following: . The Kaggle website constains a CSV file containing all the data collected to detail the impact COVID had on people&#39;s work lives. There are 15 columns for 15 variables, where each variable describes a different aspect of work and whether or not it has had any change or effect from COVID. All of the data-points are neatly organized into one CSV file, where there are exactly 10,000 rows.
+<pre><code>The link to the data set is the following: https://www.kaggle.com/datasets/willianoliveiragibin/covid-19-on-working-professionals/data. The Kaggle website constains a CSV file containing all the data collected to detail the impact COVID had on people&#39;s work lives. There are 15 columns for 15 variables, where each variable describes a different aspect of work and whether or not it has had any change or effect from COVID. All of the data-points are neatly organized into one CSV file, where there are exactly 10,000 rows.
 
 One of the most important things to note about this dataset is that fact that most of the variables report their data in a binary format. In other words, most of the data is listed in 0&#39;s and 1&#39;s, where 0 conveys that the given data-point has not been effected or changed for its given variable/column while 1 conveys that it has. Although this may seem subtle, this has lead to a variety of issues and mis-interpretations throughout this project, which have been since fixed of course. 
 
@@ -677,8 +677,7 @@ With that said, we now move on to viewing the dataset and gaining an overall syn
 <h4 id="overview-the-data">Overview the Data</h4>
 <p>First, we will take an overview of the Data to see what aspects
 needed cleaning.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># Inspect the dataset</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">colnames</span>(data) <span class="co"># View the column names to ensure proper references</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">colnames</span>(data) <span class="co"># View the column names to ensure proper references</span></span></code></pre></div>
 <pre><code>##  [1] &quot;Stress_Level&quot;                  &quot;Sector&quot;                       
 ##  [3] &quot;Increased_Work_Hours&quot;          &quot;Work_From_Home&quot;               
 ##  [5] &quot;Hours_Worked_Per_Day&quot;          &quot;Meetings_Per_Day&quot;             
@@ -687,6 +686,7 @@ needed cleaning.</p>
 ## [11] &quot;Commuting_Changes&quot;             &quot;Technology_Adaptation&quot;        
 ## [13] &quot;Salary_Changes&quot;                &quot;Team_Collaboration_Challenges&quot;
 ## [15] &quot;Affected_by_Covid&quot;</code></pre>
+<p>As shown, there are 15 variables/columns.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">str</span>(data)      <span class="co"># Structure of the data</span></span></code></pre></div>
 <pre><code>## spc_tbl_ [10,000 × 15] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
 ##  $ Stress_Level                 : chr [1:10000] &quot;Low&quot; &quot;Low&quot; &quot;Medium&quot; &quot;Medium&quot; ...
@@ -723,6 +723,9 @@ needed cleaning.</p>
 ##   ..   Affected_by_Covid = col_double()
 ##   .. )
 ##  - attr(*, &quot;problems&quot;)=&lt;externalptr&gt;</code></pre>
+<p>This code snippet reveals the structure of the Dataset. Some key
+things to note are that the binary variables are all listed as numeric
+data types while the rest are character data types.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">summary</span>(data)  <span class="co"># Summary statistics</span></span></code></pre></div>
 <pre><code>##  Stress_Level          Sector          Increased_Work_Hours Work_From_Home  
 ##  Length:10000       Length:10000       Min.   :0.0000       Min.   :0.0000  
@@ -759,6 +762,22 @@ needed cleaning.</p>
 ##  Mean   :1        
 ##  3rd Qu.:1        
 ##  Max.   :1</code></pre>
+<p>The summary statistics tells us quite a few things. One of the key
+pieces of information to take away is the proportion of data-points that
+were effected by their respective variables. This mainly applies to the
+binary/numeric variable types as the character types simply list that
+they are characters. The binary types, on the other hand, show their
+mean values, which represents the proportion of data that was effected
+in their column. For example, the “Job_Security” column lists a 0.4049
+value for the mean, which means that around 40% of the people in the
+data set experinced and impact or change to their job securities during
+the impact. This indicates that job securtity was more stable than not
+for the average person during the pandemic. In contrast,
+“Team_Collaboration_Challenges” lists a mean value of 0.7006, meaning
+that 70% of people in the dataset experinced team collaboration
+challenges, indicating that this aspect is vulnerable to Pandmeic-like
+events. Overall, this information alone provides valuable insights and
+can allow society to better prepare for future events.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(data)) <span class="co"># Check missing values</span></span></code></pre></div>
 <pre><code>##                  Stress_Level                        Sector 
 ##                             0                             0 
@@ -777,6 +796,10 @@ needed cleaning.</p>
 ##             Affected_by_Covid 
 ##                             0</code></pre>
 <h3 id="variables">Variables</h3>
+<p>Although we use most of these variables througout this analysis, our
+variables of focus are going to be the “Productivity_Change” and
+“Stress_Level” since these variables will tell us how society is doing
+as a whole.</p>
 <h2 id="results">Results</h2>
 <h2 id="conclusion">Conclusion</h2>
 
