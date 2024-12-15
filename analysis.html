@@ -834,7 +834,7 @@ ggplot(sector_analysis, aes(x = reorder(Sector, -Average_Productivity_Change), y
 change? - Sector &amp; Working from Home</h4>
 <pre class="r"><code># Segmentation analysis: Count of Productivity Change by Sector &amp; Work From Home
 if (all(c(&quot;Sector&quot;, &quot;Work_From_Home&quot;, &quot;Productivity_Change&quot;) %in% colnames(data))) {
-  
+
   # Group data by Sector and Work_From_Home
   segmentation_analysis &lt;- data %&gt;%
     filter(Productivity_Change == 1) %&gt;%  # Only include individuals with productivity change
@@ -843,7 +843,7 @@ if (all(c(&quot;Sector&quot;, &quot;Work_From_Home&quot;, &quot;Productivity_Cha
       Count = n(),  # Count the number of individuals with a change
       .groups = &quot;drop&quot;
     )
-  
+
   print(&quot;Segmentation Analysis: Number of Individuals with Productivity Change by Sector and Work From Home&quot;)
   print(segmentation_analysis)
   
@@ -852,6 +852,15 @@ if (all(c(&quot;Sector&quot;, &quot;Work_From_Home&quot;, &quot;Productivity_Cha
   not_work_from_home &lt;- segmentation_analysis %&gt;% filter(Work_From_Home == 0)
   
   # Plot: Number of Individuals (Work From Home) - Zoom in to 950-1050
+
+  print(&quot;Segmentation Analysis: Number of Individuals with Productivity Change by Sector and Work From Home&quot;)
+  print(segmentation_analysis)
+# Split the data into two subsets: Work From Home (1) and Not Work From Home (0)
+  work_from_home &lt;- segmentation_analysis %&gt;% filter(Work_From_Home == 1)
+  not_work_from_home &lt;- segmentation_analysis %&gt;% filter(Work_From_Home == 0)
+
+# Plot: Number of Individuals (Work From Home) - Zoom in to 950-1050
+
   plot_work_from_home &lt;- ggplot(work_from_home, aes(x = Sector, y = Count, fill = Sector)) +
     geom_col(width = 0.6, color = &quot;black&quot;) +
     geom_text(aes(label = Count), vjust = -0.5, size = 3) +
@@ -863,8 +872,10 @@ if (all(c(&quot;Sector&quot;, &quot;Work_From_Home&quot;, &quot;Productivity_Cha
     ) +
     theme_minimal() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
   
-  # Plot: Number of Individuals (Not Working From Home) - Zoom in to 200-300
+
+# Plot: Number of Individuals (Not Working From Home) - Zoom in to 200-300
   plot_not_work_from_home &lt;- ggplot(not_work_from_home, aes(x = Sector, y = Count, fill = Sector)) +
     geom_col(width = 0.6, color = &quot;black&quot;) +
     geom_text(aes(label = Count), vjust = -0.5, size = 3) +
@@ -876,12 +887,22 @@ if (all(c(&quot;Sector&quot;, &quot;Work_From_Home&quot;, &quot;Productivity_Cha
     ) +
     theme_minimal() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  
-  # Display the plots
   print(plot_work_from_home)
   print(plot_not_work_from_home)
 }</code></pre>
 <pre><code>## [1] &quot;Segmentation Analysis: Number of Individuals with Productivity Change by Sector and Work From Home&quot;
+## # A tibble: 8 × 3
+##   Sector     Work_From_Home Count
+##   &lt;chr&gt;               &lt;dbl&gt; &lt;int&gt;
+## 1 Education               0   225
+## 2 Education               1   997
+## 3 Healthcare              0   252
+## 4 Healthcare              1   996
+## 5 IT                      0   238
+## 6 IT                      1  1023
+## 7 Retail                  0   265
+## 8 Retail                  1   982
+## [1] &quot;Segmentation Analysis: Number of Individuals with Productivity Change by Sector and Work From Home&quot;
 ## # A tibble: 8 × 3
 ##   Sector     Work_From_Home Count
 ##   &lt;chr&gt;               &lt;dbl&gt; &lt;int&gt;
