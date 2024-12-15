@@ -41,3 +41,27 @@ To achieve this objective, we will explore the following questions:
 These are the primary questuons we seek to answer in this final project. From the information drawn from these questions, we will be able to derive meaningful insights on the best practices to use during Pandmeics and better understand how to prepare for them.
 
 ## Data
+### Structure
+    The link to the data set is the following: . The Kaggle website constains a CSV file containing all the data collected to detail the impact COVID had on people's work lives. There are 15 columns for 15 variables, where each variable describes a different aspect of work and whether or not it has had any change or effect from COVID. All of the data-points are neatly organized into one CSV file, where there are exactly 10,000 rows.
+
+    One of the most important things to note about this dataset is that fact that most of the variables report their data in a binary format. In other words, most of the data is listed in 0's and 1's, where 0 conveys that the given data-point has not been effected or changed for its given variable/column while 1 conveys that it has. Although this may seem subtle, this has lead to a variety of issues and mis-interpretations throughout this project, which have been since fixed of course. 
+
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(readr)
+library(tidyverse)
+```
+
+### Cleaning
+
+### Variables
+
+
+
+## Results
+
+
+
+
+## Conclusion
