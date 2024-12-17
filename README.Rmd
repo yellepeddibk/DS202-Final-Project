@@ -94,6 +94,10 @@ colSums(is.na(data)) # Check missing values
 
 As shown here, all the columns have a 0 for null values, which means that there are no empty values in any column. This means that we will not have to worry about accounting for null values during the data cleaning process.
 
+#### Question 1: What cleaning methods were applied, and why?
+
+From the information listed above, we realized 
+
 ### Variables
 
 - Stress_Level: Indicates the employee's stress level, categorized into levels such as low, moderate, or high.
@@ -127,6 +131,26 @@ As shown here, all the columns have a 0 for null values, which means that there 
 - Affected_by_Covid: A binary variable (1/0) specifying whether the employee's work or life has been impacted by COVID-19.
 
 Although we use most of these variables througout this analysis, our variables of focus are going to be the "Productivity_Change" and "Stress_Level" since these variables will tell us how society is doing as a whole as they reflect the state of the people.
+
+#### Question 2: What is the distribution of the Productivity_Change Variable?
+```{r}
+# Convert Productivity_Change to a factor
+data$Productivity_Change <- factor(data$Productivity_Change, 
+                                   levels = c(0, 1),
+                                   labels = c("No Change", "Change"))
+
+ggplot(data, aes(x = Productivity_Change)) +
+  geom_bar(fill = "steelblue", color = "black", width = 0.5) +  # Narrow bars
+  geom_text(stat = "count", aes(label = ..count..), 
+            vjust = -0.5, size = 4) +  # Add counts on top of bars
+  coord_cartesian(ylim = c(4950, 5050)) +  # Zoom in on y-axis
+  labs(
+    title = "Distribution of Productivity Change",
+    x = "Productivity Change",
+    y = "Count"
+  ) +
+  theme_minimal()
+```
 
 ## Results
 
