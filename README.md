@@ -195,7 +195,7 @@ they are characters. The binary types, on the other hand, show their
 mean values, which represents the proportion of data that was effected
 in their column. For example, the “Job_Security” column lists a 0.4049
 value for the mean, which means that around 40% of the people in the
-data set experinced and impact or change to their job securities during
+data set experienced and impact or change to their job securities during
 the impact. This indicates that job securtity was more stable than not
 for the average person during the pandemic. In contrast,
 “Team_Collaboration_Challenges” lists a mean value of 0.7006, meaning
