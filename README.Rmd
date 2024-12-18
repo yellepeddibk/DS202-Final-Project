@@ -176,6 +176,8 @@ ggplot(data, aes(x = Productivity_Change)) +
   theme_minimal()
 ```
 
+Initially, we used a standard distribution graph to depict our binary data. However, we soon realized that this was an incorrect choice, as binary values do not follow a continuous distribution. Instead, they require a discrete representation such as a bar chart or a specialized binary plot which accurately captured the nature of 0s and 1s. As illustrated in the graph, 4,978 participants reported no change in their productivity, whereas 5,022 reported experiencing a change during the pandemic. Although these results are quite close, they suggest a nearly even split between individuals who felt a shift in productivity and those who did not. We will delve deeper into these we will further see where the changes occur.
+
 ## Results
 
 
