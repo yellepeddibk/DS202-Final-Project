@@ -28,7 +28,7 @@ To achieve this objective, we will explore the following questions:
 -   Childcare Responsibilities & Working from Home
 -   Health Issues & Working from Home
 
-4. Are there significant correlations between productivity_change and other numeric variables?
+4. How does Stress_Level impact Productivity_Change when and when not working from Home?
 
 5. Do employees who experienced salary cuts show different productivity trends compared to those with stable salaries?
 
@@ -154,7 +154,7 @@ As shown above, each column lists the unique values that we expect to see, where
 
 - Affected_by_Covid: A binary variable (1/0) specifying whether the employee's work or life has been impacted by COVID-19.
 
-Although we use most of these variables througout this analysis, our variables of focus are going to be the "Productivity_Change" and "Stress_Level" since these variables will tell us how society is doing as a whole as they reflect the state of the people.
+Although we use most of these variables througout this analysis, our variables of focus are going to be the "Productivity_Change" and "Stress_Level" as well as "Technology_Adaptation" since these variables will tell us how society is doing as a whole as they reflect the state of the people.
 
 #### Question 2: What is the distribution of the "Productivity_Change" and "Stress_Level" Variables?
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
@@ -400,21 +400,266 @@ Overall, while fewer employees worked on-site, the data highlights that balancin
 
 ##### Health Issues & Working from Home:
 
-#### Question 4: Are there significant correlations between productivity_change and other numeric variables?
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Analyze the impact of remote work on productivity for employees with Health Issues
+if (all(c("Health_Issue", "Work_From_Home", "Productivity_Change") %in% colnames(data))) {
+  
+  # Ensure necessary columns are numeric
+  data <- data %>%
+    mutate(
+      Productivity_Change = as.numeric(Productivity_Change),
+      Health_Issue = as.numeric(Health_Issue),
+      Work_From_Home = as.numeric(Work_From_Home)
+    )
+  
+  # Filter valid data
+  data_filtered <- data %>%
+    filter(!is.na(Health_Issue) & !is.na(Work_From_Home) & !is.na(Productivity_Change))
+  
+  # Perform grouped analysis
+  health_issue_analysis <- data_filtered %>%
+    group_by(Health_Issue, Work_From_Home) %>%
+    summarise(
+      Avg_Productivity_Change = mean(Productivity_Change, na.rm = TRUE),
+      Median_Productivity_Change = median(Productivity_Change, na.rm = TRUE),
+      Count = n(),
+      .groups = "drop"
+    )
 
-From the analysis, employees experiencing medium stress levels appear to benefit the most from remote work, as indicated by a higher average productivity change 0.507 compared to those not working remotely 0.484. This outcome may stem from remote work’s flexibility and improved work life balance, which can alleviate moderate stress. However, for high stress employees, working remotely coincides with slightly lower productivity 0.495 versus in-person 0.525. This suggests that highly stressed employees might need immediate, structured support or resources not as readily available in remote settings. In contrast, for low stress employees, productivity outcomes are nearly the same between remote 0.501 and in person 0.51 work conditions, indicating that their overall performance is less sensitive to work location.
+  # Visualize the data
+  ggplot(health_issue_analysis, aes(x = as.factor(Health_Issue), y = Avg_Productivity_Change, fill = as.factor(Work_From_Home))) +
+    geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
+    geom_text(aes(label = sprintf("%.2f", Avg_Productivity_Change)), 
+              position = position_dodge(width = 0.9), 
+              vjust = -0.5, 
+              size = 3) +
+    labs(
+      title = "Average Productivity Change by Health Issue and Work From Home",
+      x = "Health Issue (0 = No, 1 = Yes)",
+      y = "Average Productivity Change",
+      fill = "Work From Home (0 = No, 1 = Yes)"
+    ) +
+    coord_cartesian(ylim = c(0.45, 0.55)) +  # Zoom y-axis from 0.45 to 0.55
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 0, hjust = 0.5))
+}
+```
+
+Employees without health issues (Health Issue = 0) reported slightly more productivity changes when working on-site (0.51) compared to remote (0.50). In contrast, employees with health issues (Health Issue = 1) reported fewer productivity changes on-site (0.49) compared to remote work (0.51). This suggests that remote work environments may cause more adjustments for employees with health challenges, while on-site work remains relatively stable for this group.
+
+#### Question 4: How does Stress_Level impact Productivity_Change when and when not working from Home?
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+if (all(c("Stress_Level", "Work_From_Home", "Productivity_Change") %in% colnames(data))) {
+  stress_analysis <- data %>%
+    group_by(Work_From_Home, Stress_Level) %>%
+    summarise(
+      Avg_Productivity = mean(Productivity_Change, na.rm = TRUE),
+      Median_Productivity = median(Productivity_Change, na.rm = TRUE),
+      Count = n(),
+      .groups = "drop"
+    )
+   # Create a graph to visualize the analysis
+  ggplot(stress_analysis, aes(x = as.factor(Stress_Level), y = Avg_Productivity, fill = as.factor(Work_From_Home))) +
+    geom_bar(stat = "identity", position = position_dodge(width = 0.6), width = 0.5, alpha = 0.8) +
+    geom_text(aes(label = round(Avg_Productivity, 3)), 
+              position = position_dodge(width = 0.6), 
+              vjust = -0.5, 
+              size = 3) +
+    labs(
+      title = "Impact of Stress Level on Productivity by Work From Home ",
+      x = "Stress Level (e.g., Low, Medium, High)",
+      y = "Average Productivity Change",
+      fill = "Work From Home (0 = No, 1 = Yes)"
+    ) +
+    coord_cartesian(ylim = c(0.45, 0.55)) +  # Adjust the visible range if needed
+    theme_minimal() +
+    theme(axis.text.x = element_text(size = 10, angle = 0, hjust = 0.5))
+}
+```
+
+The graph shows how stress levels and work arrangements relate to productivity changes. 
+
+For employees with low stress, productivity changes are minimal and nearly identical between remote work (0.501) and on-site work (0.51), suggesting that their productivity remains consistent regardless of location.
+
+For those with medium stress, productivity changes are higher when working remotely (0.507) compared to on-site work (0.484). This indicates that remote work may introduce adjustments or flexibility that result in more noticeable shifts in productivity.
+
+In contrast, employees with high stress report fewer productivity changes when working remotely (0.495) compared to on-site work (0.525). This suggests that remote work helps stabilize productivity for high-stress individuals by reducing disruptions.
+
+Overall, remote work appears to offer stability for high-stress employees, introduces greater adjustments for medium-stress individuals, and has little impact on low-stress employees.
 
 #### Question 5: Do employees who experienced salary cuts show different productivity trends compared to those with stable salaries?
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Analyze the relationship between Salary Changes and Productivity Change
+if (all(c("Salary_Changes", "Productivity_Change") %in% colnames(data))) {
+  
+  # Ensure necessary columns are numeric
+  if (!is.numeric(data$Productivity_Change)) {
+    data$Productivity_Change <- as.numeric(data$Productivity_Change)
+  }
+  if (!is.numeric(data$Salary_Changes)) {
+    data$Salary_Changes <- as.numeric(data$Salary_Changes)
+  }
+  
+  # Filter valid data
+  data_filtered <- data %>%
+    filter(!is.na(Salary_Changes) & !is.na(Productivity_Change))
+  
+  # Perform statistical summary
+  salary_analysis <- data_filtered %>%
+    group_by(Salary_Changes) %>%
+    summarise(
+      Avg_Productivity_Change = mean(Productivity_Change, na.rm = TRUE),
+      Count = n(),
+      .groups = "drop"
+    )
+  
+  # Extract key summary values
+  avg_salary_cut <- salary_analysis %>% filter(Salary_Changes == 1) %>% pull(Avg_Productivity_Change)
+  avg_stable_salary <- salary_analysis %>% filter(Salary_Changes == 0) %>% pull(Avg_Productivity_Change)
+  
+  # Perform t-test
+  salary_cut_group <- data_filtered %>%
+    filter(Salary_Changes == 1) %>% pull(Productivity_Change)
+  stable_salary_group <- data_filtered %>%
+    filter(Salary_Changes == 0) %>% pull(Productivity_Change)
+  
+  t_test_result <- t.test(salary_cut_group, stable_salary_group)
+  
+  # Print clean results
+  cat("### Analysis of Productivity Change by Salary Changes:\n")
+  cat(sprintf("- Average Productivity Change (Salary Cuts): %.3f\n", avg_salary_cut))
+  cat(sprintf("- Average Productivity Change (Stable Salaries): %.3f\n", avg_stable_salary))
+  cat(sprintf("- t-value: %.4f | p-value: %.4f\n", t_test_result$statistic, t_test_result$p.value))
+  cat(sprintf("- 95%% Confidence Interval: (%.4f, %.4f)\n", t_test_result$conf.int[1], t_test_result$conf.int[2]))
+  
+  # Conclusion
+  if (t_test_result$p.value < 0.05) {
+    cat("**Conclusion**: There is a significant difference in productivity change between the two groups.\n")
+  } else {
+    cat("**Conclusion**: There is no significant difference in productivity change between the two groups.\n")
+  }
+}
 ```
 
+The analysis shows minimal differences in productivity trends between employees who experienced salary cuts and those with stable salaries.
+
+Employees with salary cuts have an average productivity change of 0.501.
+
+Employees with stable salaries have an average productivity change of 0.502.
+
+The median productivity change is 1 for both groups, suggesting that the central tendency of productivity is identical.
+
+Statistical Test:
+
+A Welch Two-Sample t-test was conducted to compare the means of the two groups:
+
+The t-value is -0.1154 with a p-value of 0.9081, indicating no statistically significant difference.
+The 95% confidence interval for the difference in means is (-0.0262, 0.0233), further confirming the lack of meaningful difference.
+
+The data indicates that salary changes (cuts or stability) had negligible impact on productivity trends during the observed period. Both groups maintained similar productivity levels.
+
 #### Question 6: What was the impact of Childcare Responsibilities, Commuting Changes, and Health Issues on Technology Adaptation Levels
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Filter the data for visualization
+if (all(c("Childcare_Responsibilities", "Commuting_Changes", "Health_Issue", "Technology_Adaptation") %in% colnames(data))) {
+  
+  # Ensure necessary columns are numeric
+  data <- data %>%
+    mutate(
+      Childcare_Responsibilities = as.numeric(Childcare_Responsibilities),
+      Commuting_Changes = as.numeric(Commuting_Changes),
+      Health_Issue = as.numeric(Health_Issue),
+      Technology_Adaptation = as.numeric(Technology_Adaptation)
+    )
+  
+  # Filter valid data
+  data_filtered <- data %>%
+    filter(
+      !is.na(Childcare_Responsibilities) & 
+      !is.na(Commuting_Changes) & 
+      !is.na(Health_Issue) & 
+      !is.na(Technology_Adaptation)
+    )
+  
+  # Perform grouped analysis
+  technology_adaptation_analysis <- data_filtered %>%
+    group_by(Childcare_Responsibilities, Commuting_Changes, Health_Issue) %>%
+    summarise(
+      Avg_Technology_Adaptation = mean(Technology_Adaptation, na.rm = TRUE),
+      Count = n(),
+      .groups = "drop"
+    )
+  
+  # Filter for no health issues and create the first plot
+  no_health_issues <- technology_adaptation_analysis %>%
+    filter(Health_Issue == 0)
+  
+  plot_no_health <- ggplot(no_health_issues, aes(
+    x = as.factor(Childcare_Responsibilities), 
+    y = Avg_Technology_Adaptation, 
+    fill = as.factor(Commuting_Changes)
+  )) +
+    geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
+    geom_text(aes(label = sprintf("%.3f", Avg_Technology_Adaptation)), 
+              position = position_dodge(width = 0.9), 
+              vjust = -0.5, 
+              size = 3) +
+    coord_cartesian(ylim = c(0.55, 0.65)) +
+    labs(
+      title = "Technology Adaptation (No Health Issues)",
+      x = "Childcare Responsibilities (0 = No, 1 = Yes)",
+      y = "Average Technology Adaptation",
+      fill = "Commuting Changes (0 = No, 1 = Yes)"
+    ) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 0, hjust = 0.5))
+  
+  # Filter for health issues and create the second plot
+  health_issues <- technology_adaptation_analysis %>%
+    filter(Health_Issue == 1)
+  
+  plot_health <- ggplot(health_issues, aes(
+    x = as.factor(Childcare_Responsibilities), 
+    y = Avg_Technology_Adaptation, 
+    fill = as.factor(Commuting_Changes)
+  )) +
+    geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
+    geom_text(aes(label = sprintf("%.3f", Avg_Technology_Adaptation)), 
+              position = position_dodge(width = 0.9), 
+              vjust = -0.5, 
+              size = 3) +
+    coord_cartesian(ylim = c(0.55, 0.65)) +
+    labs(
+      title = "Technology Adaptation (Health Issues)",
+      x = "Childcare Responsibilities (0 = No, 1 = Yes)",
+      y = "Average Technology Adaptation",
+      fill = "Commuting Changes (0 = No, 1 = Yes)"
+    ) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 0, hjust = 0.5))
+  
+  # Display the plots
+  print(plot_no_health)
+  cat("\n\n\n")
+  print(plot_health)
+}
+```
+
+Employees without health issues had the highest technology adaptation level of 0.626 when they had childcare responsibilities and no commuting changes. When commuting changes were introduced, adaptation slightly decreased to 0.606. Those without childcare responsibilities had lower adaptation levels, with 0.591 for no commuting changes and 0.597 with commuting changes.
+
+For employees with health issues, the highest adaptation level of 0.628 was observed for those without childcare responsibilities and no commuting changes. Adaptation for employees with childcare responsibilities remained consistent at 0.615 (no commuting changes) and 0.616 (with commuting changes), indicating minimal impact of commuting changes in this group.
+
+Overall, technology adaptation peaked for employees without health issues and with childcare responsibilities but dropped slightly when commuting changes were introduced. For those with health issues, commuting changes had less of an effect, and childcare responsibilities showed stable adaptation levels. This suggests that employees managing childcare were able to adapt well, particularly when health issues were not a factor.
 
 ## Conclusion
 
 #### Question 7: What are the key takeaways or recommendations based on our analysis?
 
+The analysis highlights key insights into productivity, stress, and adaptation during pandemic-like disruptions. Employees working from home generally reported higher productivity changes, especially for medium stress levels, while those with high stress experienced better stability when working on-site. Childcare responsibilities significantly influenced technology adaptation, with employees without health issues showing the highest adaptation levels when managing childcare and no commuting changes. Commuting changes had a marginal impact on employees with health issues. Sectors like Education and IT reported more productivity changes, indicating greater disruption, while Retail and Healthcare demonstrated relative stability. Overall, recommendations include providing targeted support for highly stressed employees, enhancing resources for remote workers with childcare responsibilities, and ensuring flexibility to balance collaboration and adaptation across different sectors.
+
 #### Question 8: What can we improve if this analysis were conducted again?
 
-In conclusion, our analysis on the impact that COVID had on people's work lives has revealed how well prepared and un-prepared society is for pandemic-like events. We have also confirmed what works best and what doesn't when attempting to adapt to such events.
+If this analysis were conducted again, improvements could include gathering more detailed data on the nature of productivity changes to distinguish between positive and negative impacts. Collecting qualitative responses alongside quantitative data would provide deeper insights into the reasons behind changes in stress levels and technology adaptation. Addressing inconsistencies in binary variables, such as clarifying their interpretation, would reduce ambiguity. Additionally, incorporating time-based trends would allow us to analyze how productivity, stress, and adaptation evolved over the course of the pandemic. Finally, a larger and more diverse dataset across regions and industries would improve the generalizability of the findings.

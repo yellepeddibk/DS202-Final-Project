@@ -33,8 +33,8 @@ To achieve this objective, we will explore the following questions:
 - Childcare Responsibilities & Working from Home
 - Health Issues & Working from Home
 
-4.  Are there significant correlations between productivity_change and
-    other numeric variables?
+4.  How does Stress_Level impact Productivity_Change when and when not
+    working from Home?
 
 5.  Do employees who experienced salary cuts show different productivity
     trends compared to those with stable salaries?
@@ -407,8 +407,9 @@ further analysis.
 
 Although we use most of these variables througout this analysis, our
 variables of focus are going to be the “Productivity_Change” and
-“Stress_Level” since these variables will tell us how society is doing
-as a whole as they reflect the state of the people.
+“Stress_Level” as well as “Technology_Adaptation” since these variables
+will tell us how society is doing as a whole as they reflect the state
+of the people.
 
 #### Question 2: What is the distribution of the “Productivity_Change” and “Stress_Level” Variables?
 
@@ -517,32 +518,134 @@ settings, may influence productivity.
 
 ##### Health Issues & Working from Home:
 
-#### Question 4: Are there significant correlations between productivity_change and other numeric variables?
+![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
-From the analysis, employees experiencing medium stress levels appear to
-benefit the most from remote work, as indicated by a higher average
-productivity change 0.507 compared to those not working remotely 0.484.
-This outcome may stem from remote work’s flexibility and improved work
-life balance, which can alleviate moderate stress. However, for high
-stress employees, working remotely coincides with slightly lower
-productivity 0.495 versus in-person 0.525. This suggests that highly
-stressed employees might need immediate, structured support or resources
-not as readily available in remote settings. In contrast, for low stress
-employees, productivity outcomes are nearly the same between remote
-0.501 and in person 0.51 work conditions, indicating that their overall
-performance is less sensitive to work location.
+Employees without health issues (Health Issue = 0) reported slightly
+more productivity changes when working on-site (0.51) compared to remote
+(0.50). In contrast, employees with health issues (Health Issue = 1)
+reported fewer productivity changes on-site (0.49) compared to remote
+work (0.51). This suggests that remote work environments may cause more
+adjustments for employees with health challenges, while on-site work
+remains relatively stable for this group.
+
+#### Question 4: How does Stress_Level impact Productivity_Change when and when not working from Home?
+
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+
+The graph shows how stress levels and work arrangements relate to
+productivity changes.
+
+For employees with low stress, productivity changes are minimal and
+nearly identical between remote work (0.501) and on-site work (0.51),
+suggesting that their productivity remains consistent regardless of
+location.
+
+For those with medium stress, productivity changes are higher when
+working remotely (0.507) compared to on-site work (0.484). This
+indicates that remote work may introduce adjustments or flexibility that
+result in more noticeable shifts in productivity.
+
+In contrast, employees with high stress report fewer productivity
+changes when working remotely (0.495) compared to on-site work (0.525).
+This suggests that remote work helps stabilize productivity for
+high-stress individuals by reducing disruptions.
+
+Overall, remote work appears to offer stability for high-stress
+employees, introduces greater adjustments for medium-stress individuals,
+and has little impact on low-stress employees.
 
 #### Question 5: Do employees who experienced salary cuts show different productivity trends compared to those with stable salaries?
 
+    ## ### Analysis of Productivity Change by Salary Changes:
+    ## - Average Productivity Change (Salary Cuts): 0.501
+    ## - Average Productivity Change (Stable Salaries): 0.502
+    ## - t-value: -0.1154 | p-value: 0.9081
+    ## - 95% Confidence Interval: (-0.0262, 0.0233)
+    ## **Conclusion**: There is no significant difference in productivity change between the two groups.
+
+The analysis shows minimal differences in productivity trends between
+employees who experienced salary cuts and those with stable salaries.
+
+Employees with salary cuts have an average productivity change of 0.501.
+
+Employees with stable salaries have an average productivity change of
+0.502.
+
+The median productivity change is 1 for both groups, suggesting that the
+central tendency of productivity is identical.
+
+Statistical Test:
+
+A Welch Two-Sample t-test was conducted to compare the means of the two
+groups:
+
+The t-value is -0.1154 with a p-value of 0.9081, indicating no
+statistically significant difference. The 95% confidence interval for
+the difference in means is (-0.0262, 0.0233), further confirming the
+lack of meaningful difference.
+
+The data indicates that salary changes (cuts or stability) had
+negligible impact on productivity trends during the observed period.
+Both groups maintained similar productivity levels.
+
 #### Question 6: What was the impact of Childcare Responsibilities, Commuting Changes, and Health Issues on Technology Adaptation Levels
+
+![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+
+![](README_files/figure-gfm/unnamed-chunk-19-2.png)<!-- -->
+
+Employees without health issues had the highest technology adaptation
+level of 0.626 when they had childcare responsibilities and no commuting
+changes. When commuting changes were introduced, adaptation slightly
+decreased to 0.606. Those without childcare responsibilities had lower
+adaptation levels, with 0.591 for no commuting changes and 0.597 with
+commuting changes.
+
+For employees with health issues, the highest adaptation level of 0.628
+was observed for those without childcare responsibilities and no
+commuting changes. Adaptation for employees with childcare
+responsibilities remained consistent at 0.615 (no commuting changes) and
+0.616 (with commuting changes), indicating minimal impact of commuting
+changes in this group.
+
+Overall, technology adaptation peaked for employees without health
+issues and with childcare responsibilities but dropped slightly when
+commuting changes were introduced. For those with health issues,
+commuting changes had less of an effect, and childcare responsibilities
+showed stable adaptation levels. This suggests that employees managing
+childcare were able to adapt well, particularly when health issues were
+not a factor.
 
 ## Conclusion
 
 #### Question 7: What are the key takeaways or recommendations based on our analysis?
 
+The analysis highlights key insights into productivity, stress, and
+adaptation during pandemic-like disruptions. Employees working from home
+generally reported higher productivity changes, especially for medium
+stress levels, while those with high stress experienced better stability
+when working on-site. Childcare responsibilities significantly
+influenced technology adaptation, with employees without health issues
+showing the highest adaptation levels when managing childcare and no
+commuting changes. Commuting changes had a marginal impact on employees
+with health issues. Sectors like Education and IT reported more
+productivity changes, indicating greater disruption, while Retail and
+Healthcare demonstrated relative stability. Overall, recommendations
+include providing targeted support for highly stressed employees,
+enhancing resources for remote workers with childcare responsibilities,
+and ensuring flexibility to balance collaboration and adaptation across
+different sectors.
+
 #### Question 8: What can we improve if this analysis were conducted again?
 
-In conclusion, our analysis on the impact that COVID had on people’s
-work lives has revealed how well prepared and un-prepared society is for
-pandemic-like events. We have also confirmed what works best and what
-doesn’t when attempting to adapt to such events.
+If this analysis were conducted again, improvements could include
+gathering more detailed data on the nature of productivity changes to
+distinguish between positive and negative impacts. Collecting
+qualitative responses alongside quantitative data would provide deeper
+insights into the reasons behind changes in stress levels and technology
+adaptation. Addressing inconsistencies in binary variables, such as
+clarifying their interpretation, would reduce ambiguity. Additionally,
+incorporating time-based trends would allow us to analyze how
+productivity, stress, and adaptation evolved over the course of the
+pandemic. Finally, a larger and more diverse dataset across regions and
+industries would improve the generalizability of the findings.
