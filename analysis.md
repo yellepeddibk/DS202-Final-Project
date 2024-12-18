@@ -11,7 +11,7 @@ data <- read_csv("covid_impact_on_work new.csv")
 ```
 
     ## Rows: 10000 Columns: 15
-    ## ── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────
+    ## ── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr  (4): Stress_Level, Sector, Hours_Worked_Per_Day, Meetings_Per_Day
     ## dbl (11): Increased_Work_Hours, Work_From_Home, Productivity_Change, Health_...
@@ -338,12 +338,7 @@ print(summary_stats)
 #### Question 2: What is the distribution of the Productivity_Change Variable?
 
 ``` r
-# Convert Productivity_Change to a factor
-data$Productivity_Change <- factor(data$Productivity_Change, 
-                                   levels = c(0, 1),
-                                   labels = c("No Change", "Change"))
-
-ggplot(data, aes(x = Productivity_Change)) +
+ggplot(data, aes(x = factor(Productivity_Change, levels = c(0, 1), labels = c("No Change", "Change")))) +
   geom_bar(fill = "steelblue", color = "black", width = 0.5) +  # Narrow bars
   geom_text(stat = "count", aes(label = ..count..), 
             vjust = -0.5, size = 4) +  # Add counts on top of bars
@@ -355,11 +350,6 @@ ggplot(data, aes(x = Productivity_Change)) +
   ) +
   theme_minimal()
 ```
-
-    ## Warning: The dot-dot notation (`..count..`) was deprecated in ggplot2 3.4.0.
-    ## ℹ Please use `after_stat(count)` instead.
-    ## This warning is displayed once every 8 hours.
-    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
 
 ![](analysis_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
@@ -430,18 +420,18 @@ if (all(c("Work_From_Home", "Productivity_Change", "Stress_Level", "Childcare_Re
     ## # A tibble: 12 × 6
     ##    Work_From_Home Stress_Level Childcare_Responsibilities Average_Productivity…¹
     ##             <dbl> <fct>                             <dbl>                  <dbl>
-    ##  1              0 low                                   0                   1.51
-    ##  2              0 low                                   1                   1.51
-    ##  3              0 medium                                0                   1.49
-    ##  4              0 medium                                1                   1.48
-    ##  5              0 high                                  0                   1.51
-    ##  6              0 high                                  1                   1.54
-    ##  7              1 low                                   0                   1.50
-    ##  8              1 low                                   1                   1.50
-    ##  9              1 medium                                0                   1.50
-    ## 10              1 medium                                1                   1.51
-    ## 11              1 high                                  0                   1.50
-    ## 12              1 high                                  1                   1.48
+    ##  1              0 low                                   0                  0.510
+    ##  2              0 low                                   1                  0.510
+    ##  3              0 medium                                0                  0.487
+    ##  4              0 medium                                1                  0.480
+    ##  5              0 high                                  0                  0.514
+    ##  6              0 high                                  1                  0.542
+    ##  7              1 low                                   0                  0.505
+    ##  8              1 low                                   1                  0.496
+    ##  9              1 medium                                0                  0.502
+    ## 10              1 medium                                1                  0.515
+    ## 11              1 high                                  0                  0.505
+    ## 12              1 high                                  1                  0.482
     ## # ℹ abbreviated name: ¹​Average_Productivity_Change
     ## # ℹ 2 more variables: Median_Productivity_Change <dbl>, Count <int>
 
@@ -501,7 +491,7 @@ ggplot(sector_analysis, aes(x = reorder(Sector, -Average_Productivity_Change), y
     x = "Sector",
     y = "Average Productivity Change"
   ) +
-  coord_cartesian(ylim = c(1.45, 1.55)) +  # Only display the range 1.45 to 0.55
+  coord_cartesian(ylim = c(0.45, 0.55)) +  # Only display the range 0.45 to 0.55
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
   }
@@ -512,10 +502,10 @@ ggplot(sector_analysis, aes(x = reorder(Sector, -Average_Productivity_Change), y
     ## # A tibble: 4 × 4
     ##   Sector     Average_Productivity_Change Median_Productivity_Change Count
     ##   <chr>                            <dbl>                      <dbl> <int>
-    ## 1 Education                         1.51                          2  2484
-    ## 2 Healthcare                        1.50                          2  2498
-    ## 3 IT                                1.50                          2  2546
-    ## 4 Retail                            1.50                          1  2472
+    ## 1 Education                        0.508                          1  2484
+    ## 2 Healthcare                       0.500                          1  2498
+    ## 3 IT                               0.505                          1  2546
+    ## 4 Retail                           0.496                          0  2472
 
 ![](analysis_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
@@ -590,26 +580,26 @@ if (all(c("Sector", "Work_From_Home", "Productivity_Change") %in% colnames(data)
     ## # A tibble: 8 × 3
     ##   Sector     Work_From_Home Count
     ##   <chr>               <dbl> <int>
-    ## 1 Education               0   225
-    ## 2 Education               1   997
-    ## 3 Healthcare              0   252
-    ## 4 Healthcare              1   996
-    ## 5 IT                      0   238
-    ## 6 IT                      1  1023
-    ## 7 Retail                  0   265
-    ## 8 Retail                  1   982
+    ## 1 Education               0   249
+    ## 2 Education               1  1013
+    ## 3 Healthcare              0   247
+    ## 4 Healthcare              1  1003
+    ## 5 IT                      0   259
+    ## 6 IT                      1  1026
+    ## 7 Retail                  0   232
+    ## 8 Retail                  1   993
     ## [1] "Segmentation Analysis: Number of Individuals with Productivity Change by Sector and Work From Home"
     ## # A tibble: 8 × 3
     ##   Sector     Work_From_Home Count
     ##   <chr>               <dbl> <int>
-    ## 1 Education               0   225
-    ## 2 Education               1   997
-    ## 3 Healthcare              0   252
-    ## 4 Healthcare              1   996
-    ## 5 IT                      0   238
-    ## 6 IT                      1  1023
-    ## 7 Retail                  0   265
-    ## 8 Retail                  1   982
+    ## 1 Education               0   249
+    ## 2 Education               1  1013
+    ## 3 Healthcare              0   247
+    ## 4 Healthcare              1  1003
+    ## 5 IT                      0   259
+    ## 6 IT                      1  1026
+    ## 7 Retail                  0   232
+    ## 8 Retail                  1   993
 
 ![](analysis_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->![](analysis_files/figure-gfm/unnamed-chunk-13-2.png)<!-- -->
 
@@ -674,9 +664,9 @@ if (all(c("Childcare_Responsibilities", "Work_From_Home", "Productivity_Change")
     ##   Work_From_Home Childcare_Responsibilities Count
     ##            <dbl>                      <dbl> <int>
     ## 1              0                          0   592
-    ## 2              0                          1   388
-    ## 3              1                          0  2409
-    ## 4              1                          1  1589
+    ## 2              0                          1   395
+    ## 3              1                          0  2440
+    ## 4              1                          1  1595
 
 ![](analysis_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->![](analysis_files/figure-gfm/unnamed-chunk-14-2.png)<!-- -->
 
@@ -741,10 +731,10 @@ if (all(c("Health_Issue", "Work_From_Home", "Productivity_Change") %in% colnames
     ## # A tibble: 4 × 5
     ##   Health_Issue Work_From_Home Avg_Productivity_Change Median_Productivity_Change
     ##          <dbl>          <dbl>                   <dbl>                      <dbl>
-    ## 1            0              0                    1.51                          2
-    ## 2            0              1                    1.50                          2
-    ## 3            1              0                    1.49                          1
-    ## 4            1              1                    1.51                          2
+    ## 1            0              0                   0.506                          1
+    ## 2            0              1                   0.501                          1
+    ## 3            1              0                   0.491                          0
+    ## 4            1              1                   0.506                          1
     ## # ℹ 1 more variable: Count <int>
 
 ![](analysis_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
@@ -791,12 +781,12 @@ if (all(c("Stress_Level", "Work_From_Home", "Productivity_Change") %in% colnames
     ## # A tibble: 6 × 5
     ##   Work_From_Home Stress_Level Avg_Productivity Median_Productivity Count
     ##            <dbl> <fct>                   <dbl>               <dbl> <int>
-    ## 1              0 low                      1.51                   2   400
-    ## 2              0 medium                   1.48                   1   965
-    ## 3              0 high                     1.52                   2   602
-    ## 4              1 low                      1.50                   2  1608
-    ## 5              1 medium                   1.51                   2  3991
-    ## 6              1 high                     1.50                   1  2434
+    ## 1              0 low                     0.51                    1   400
+    ## 2              0 medium                  0.484                   0   965
+    ## 3              0 high                    0.525                   1   602
+    ## 4              1 low                     0.501                   1  1608
+    ## 5              1 medium                  0.507                   1  3991
+    ## 6              1 high                    0.495                   0  2434
 
 ![](analysis_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
@@ -855,8 +845,8 @@ if (all(c("Salary_Changes", "Productivity_Change") %in% colnames(data))) {
     ## # A tibble: 2 × 4
     ##   Salary_Changes Avg_Productivity_Change Median_Productivity_Change Count
     ##            <dbl>                   <dbl>                      <dbl> <int>
-    ## 1              0                    1.50                          2  8052
-    ## 2              1                    1.50                          2  1948
+    ## 1              0                   0.502                          1  8052
+    ## 2              1                   0.501                          1  1948
     ## [1] "T-test Results:"
     ## 
     ##  Welch Two Sample t-test
@@ -868,7 +858,7 @@ if (all(c("Salary_Changes", "Productivity_Change") %in% colnames(data))) {
     ##  -0.02621670  0.02330238
     ## sample estimates:
     ## mean of x mean of y 
-    ##  1.501027  1.502484
+    ## 0.5010267 0.5024839
 
 #### Question 6: What was the impact of Childcare Responsibilities, Commuting Changes, and Health Issues on Technology Adaptation Levels
 
