@@ -22,7 +22,8 @@ To achieve this objective, we will explore the following questions:
 
 1.  What cleaning methods were applied, and why?
 
-2.  What is the distribution of the Productivity_Change Variable?
+2.  What is the distribution of the “Productivity_Change” and
+    “Stress_Level” Variables?
 
 3.  What is the impact of working from home on productivity change?
 
@@ -409,7 +410,7 @@ variables of focus are going to be the “Productivity_Change” and
 “Stress_Level” since these variables will tell us how society is doing
 as a whole as they reflect the state of the people.
 
-#### Question 2: What is the distribution of the Productivity_Change Variable?
+#### Question 2: What is the distribution of the “Productivity_Change” and “Stress_Level” Variables?
 
 ``` r
 # Convert Productivity_Change to a factor
@@ -431,6 +432,59 @@ ggplot(data, aes(x = Productivity_Change)) +
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+Initially, we used a standard distribution graph to depict our binary
+data. However, we soon realized that this was an incorrect choice, as
+binary values do not follow a continuous distribution. Instead, they
+require a discrete representation such as a bar chart or a specialized
+binary plot which accurately captured the nature of 0s and 1s. As
+illustrated in the graph, 4,978 participants reported no change in their
+productivity, whereas 5,022 reported experiencing a change during the
+pandemic. Although these results are quite close, they suggest a nearly
+even split between individuals who felt a shift in productivity and
+those who did not. We will delve deeper into these we will further see
+where the changes occur. Now, let’s see the Stress_Level:
+
+``` r
+ggplot(data, aes(x = factor(Stress_Level, levels = c("Low", "Medium", "High")))) +
+  geom_bar(
+    fill = "skyblue", 
+    color = "black", 
+    width = 0.6  # Adjust bar width (spacing between bars)
+  ) +
+  geom_text(
+    stat = 'count',
+    aes(label = ..count..),  # Display counts on top of bars
+    vjust = -0.5,            # Adjust position above bars
+    size = 4                 # Text size
+  ) +
+  labs(
+    title = "Distribution of Stress Levels",
+    x = "Stress Level",
+    y = "Count"
+  ) +
+  scale_y_continuous(
+    breaks = seq(0, 5000, by = 1000),  # Y-axis increments by 1,000
+    limits = c(0, 5000)               # Set maximum to 5,000
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    axis.text.x = element_text(size = 12, margin = margin(t = 5)),
+    axis.text.y = element_text(size = 12, margin = margin(r = 5)),
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold")
+  )
+```
+
+![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+The Stress_Level variable is different from the Productivity_Change
+variable in that it is not binary, but rather categorical. It made the
+most sense to proceeed with a bar graph as we could depict each state of
+stress and the number of people for each. The distribution indicates
+that most people reported being at a medium stress level during the
+Pandemic, which is what we expected. We will further analyze the dataset
+to find out the effects of such stress levels, what causes them, and
+what methods work in events like pandemics to minimize stress.
 
 ## Results
 
