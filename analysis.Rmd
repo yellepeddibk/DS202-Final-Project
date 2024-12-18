@@ -214,30 +214,14 @@ if (all(c("Work_From_Home", "Productivity_Change", "Stress_Level", "Childcare_Re
   print(analysis)
   
   # Visualize the impact
-  ggplot(analysis, aes(x = Stress_Level, y = Average_Productivity_Change, fill = as.factor(Work_From_Home))) +
-    geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
-    facet_wrap(~ Childcare_Responsibilities, scales = "free") +
-    labs(
-      title = "Productivity Change by Stress Level and Childcare",
-      x = "Stress Level",
-      y = "Average Productivity Change",
-      fill = "Work From Home (0 = No, 1 = Yes)"
-    ) +
-    theme_minimal() +
-    theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1), axis.title.x = element_text(size = 12))
-}
-
-
-```
-
-#### Question 3: What is the impact of working from home on productivity change? - Stress Level & Working from Home - Graph #2
-```{r}
 ggplot(data, aes(x = Stress_Level, fill = factor(Work_From_Home))) +
   geom_bar(position = "stack") +
   labs(title = "Stress Level and Work From Home Status", 
       x = "Stress Level", 
       y = "Count of Employees") +
   theme_minimal()
+}
+
 ```
 
 #### Question 3: What is the impact of working from home on productivity change? - Sector
