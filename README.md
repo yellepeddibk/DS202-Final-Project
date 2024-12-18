@@ -455,11 +455,21 @@ the prevalence of stress levels regardless of work arrangement.
 
 ##### Sector:
 
-##### Sector & Working from Home:
-
 ![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
-![](README_files/figure-gfm/unnamed-chunk-13-2.png)<!-- -->
+The graph displays the average productivity change by sector during
+COVID-19. Education (0.508) and IT (0.505) report the highest changes,
+likely reflecting their ability to adapt quickly to remote work but also
+highlighting greater disruption. In contrast, Healthcare (0.500) and
+Retail (0.496) show lower average changes, suggesting these sectors
+maintained more stability or resilience during the pandemic, possibly
+due to the essential nature of their operations.
+
+##### Sector & Working from Home:
+
+![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+![](README_files/figure-gfm/unnamed-chunk-14-2.png)<!-- -->
 
 The analysis shows that the number of reported productivity changes
 varies by sector and work arrangement. Across all sectors, remote

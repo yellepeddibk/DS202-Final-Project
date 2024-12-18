@@ -232,6 +232,51 @@ The graph shows the distribution of stress levels among employees, segmented by 
 
 ##### Sector:
 
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Grouping by Sector to Identify Trends in Productivity change
+# Check if Productivity_Change and Sector exist in the dataset
+if (all(c("Sector", "Productivity_Change") %in% colnames(data))) {
+  
+  # Ensure Productivity_Change is numeric
+  if (!is.numeric(data$Productivity_Change)) {
+    data$Productivity_Change <- as.numeric(data$Productivity_Change)
+  }
+  
+  # Filter out rows with missing or invalid data in the columns of interest
+  data_filtered <- data %>%
+    filter(!is.na(Sector) & !is.na(Productivity_Change))
+  
+  # Ensure the filtered data is not empty
+  if (nrow(data_filtered) > 0) {
+    # Analyze productivity change by sector
+    sector_analysis <- data_filtered %>%
+      group_by(Sector) %>%
+      summarise(
+        Average_Productivity_Change = mean(Productivity_Change, na.rm = TRUE),
+        Median_Productivity_Change = median(Productivity_Change, na.rm = TRUE),
+        Count = n()
+      )
+    
+ggplot(sector_analysis, aes(x = reorder(Sector, -Average_Productivity_Change), y = Average_Productivity_Change)) +
+  geom_col(fill = "skyblue", width = 0.6, color = "black") +
+  geom_text(aes(label = sprintf("%.3f", Average_Productivity_Change)), 
+            vjust = -0.5, 
+            size = 3) +
+  labs(
+    title = "Average Productivity Change by Sector",
+    x = "Sector",
+    y = "Average Productivity Change"
+  ) +
+  coord_cartesian(ylim = c(0.45, 0.55)) +  # Only display the range 0.45 to 0.55
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  }
+}
+```
+
+
+The graph displays the average productivity change by sector during COVID-19. Education (0.508) and IT (0.505) report the highest changes, likely reflecting their ability to adapt quickly to remote work but also highlighting greater disruption. In contrast, Healthcare (0.500) and Retail (0.496) show lower average changes, suggesting these sectors maintained more stability or resilience during the pandemic, possibly due to the essential nature of their operations.
+
 ##### Sector & Working from Home:
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
