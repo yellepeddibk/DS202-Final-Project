@@ -191,13 +191,22 @@ if (all(c("Work_From_Home", "Productivity_Change", "Stress_Level", "Childcare_Re
   # Replace missing values in Productivity_Change with its mean
   data$Productivity_Change[is.na(data$Productivity_Change)] <- mean(data$Productivity_Change, na.rm = TRUE)
   
-  # Analyze impact of Work_From_Home across Stress_Level and Childcare_Responsibilities
+  # Check Stress_Level values
+  print("Unique Stress Levels:")
+  print(unique(data$Stress_Level))
+  
+  # Standardize Stress_Level to lowercase and convert to a factor with correct order
+  data$Stress_Level <- tolower(data$Stress_Level)
+  data$Stress_Level <- factor(data$Stress_Level, levels = c("low", "medium", "high"))
+  
+  # Group the data and summarize
   analysis <- data %>%
     group_by(Work_From_Home, Stress_Level, Childcare_Responsibilities) %>%
     summarise(
       Average_Productivity_Change = mean(Productivity_Change, na.rm = TRUE),
       Median_Productivity_Change = median(Productivity_Change, na.rm = TRUE),
-      Count = n()
+      Count = n(),
+      .groups = "drop"
     )
   
   # Print the summary table
@@ -216,6 +225,7 @@ if (all(c("Work_From_Home", "Productivity_Change", "Stress_Level", "Childcare_Re
     theme_minimal() +
     theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1), axis.title.x = element_text(size = 12))
 }
+
 ```
 
 #### Question 3: What is the impact of working from home on productivity change? - Stress Level & Working from Home - Graph #2
@@ -363,7 +373,7 @@ if (all(c("Childcare_Responsibilities", "Work_From_Home", "Productivity_Change")
     geom_bar(stat = "identity", width = 0.5, color = "black", alpha = 0.8) +
     geom_text(aes(label = Count), vjust = -0.5, size = 3) +
     labs(
-      title = "Number of Individuals Affected by Productivity Change (Work From Home)",
+      title = "Individuals Affected by Productivity and Childcare (Work From Home)",
       x = "Childcare Responsibilities (0 = No, 1 = Yes)",
       y = "Number of Individuals",
       fill = "Childcare Responsibilities"
@@ -376,7 +386,7 @@ if (all(c("Childcare_Responsibilities", "Work_From_Home", "Productivity_Change")
     geom_bar(stat = "identity", width = 0.5, color = "black", alpha = 0.8) +
     geom_text(aes(label = Count), vjust = -0.5, size = 3) +
     labs(
-      title = "Number of Individuals Affected by Productivity Change (Not Working From Home)",
+      title = "Individuals Affected by Productivity and Childcare (Not Working From Home)",
       x = "Childcare Responsibilities (0 = No, 1 = Yes)",
       y = "Number of Individuals",
       fill = "Childcare Responsibilities"
