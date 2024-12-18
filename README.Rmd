@@ -102,7 +102,7 @@ After a check for unique values, it is evident that there is an issue with the c
 
 #### Question 1: What cleaning methods were applied, and why
 
-From the information listed above, we realized that not much Data Cleaning is necessary for the dataset: the binaary values are all already listed as numeric; the verbal columns have the proper "character" data type; the null check shows 0 null values for all columns, which means we do not need to perform any substitution or data removal; and lastly, from the unique input types, except the Hours_Worked_Per_Day and Meetings_Per_Day columns, all column indicate that they only have the data types they should have, such as binary variables only have binary types. That of course leaves us with the need to fix the Hours_Worked_Per_Day and Meetings_Per_Day columns. The way the data is inputed in these columns is very interesting; it is most likely formatted in a different countries numeric system, especially with the number of decimals - ex. "6.392.393.639.805.820". At first, we thought that maybe each input was representing multiple days of the week per person, but the column explicitly states "Hours_Worked_Per_Day" or "Meetings_Per_Day" implying each input describes the value per day. This means that something like hours should range from 0-24 hours, which made us to believe that the data was inputted without any sort of rounding, resulting in the long floating values we see. However, after even further analysis, we found a negative value inputted into the "Meetings_Per_Day" column: -5.829.769.194.792.650. At this point, we could not find any reasoning or explanattion that clarifies how this value could exist; it is not possible to have negative meetings in a day. With seeing the unsusally decimal input and the anomoly of negative meetings, we finally decided that it was best to completely remove both these columns from the dataset as it was evident that they were corrupted.
+From the information listed above, we realized that not much Data Cleaning is necessary for the dataset: the binaary values are all already listed as doubles, where numerics fall under; the verbal columns have the proper "character" data type; the null check shows 0 null values for all columns, which means we do not need to perform any substitution or data removal; and lastly, from the unique input types, except the Hours_Worked_Per_Day and Meetings_Per_Day columns, all column indicate that they only have the data types they should have, such as binary variables only have binary types. That of course leaves us with the need to fix the Hours_Worked_Per_Day and Meetings_Per_Day columns. The way the data is inputed in these columns is very interesting; it is most likely formatted in a different countries numeric system, especially with the number of decimals - ex. "6.392.393.639.805.820". At first, we thought that maybe each input was representing multiple days of the week per person, but the column explicitly states "Hours_Worked_Per_Day" or "Meetings_Per_Day" implying each input describes the value per day. This means that something like hours should range from 0-24 hours, which made us to believe that the data was inputted without any sort of rounding, resulting in the long floating values we see. However, after even further analysis, we found a negative value inputted into the "Meetings_Per_Day" column: -5.829.769.194.792.650. At this point, we could not find any reasoning or explanattion that clarifies how this value could exist; it is not possible to have negative meetings in a day. With seeing the unsusally decimal input and the anomoly of negative meetings, we finally decided that it was best to completely remove both these columns from the dataset as it was evident that they were corrupted.
 
 ```{r}
 # Remove the two problematic columns
@@ -157,7 +157,7 @@ As shown above, each column lists the unique values that we expect to see, where
 Although we use most of these variables througout this analysis, our variables of focus are going to be the "Productivity_Change" and "Stress_Level" since these variables will tell us how society is doing as a whole as they reflect the state of the people.
 
 #### Question 2: What is the distribution of the "Productivity_Change" and "Stress_Level" Variables?
-```{r}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 # Convert Productivity_Change to a factor
 data$Productivity_Change <- factor(data$Productivity_Change, 
                                    levels = c(0, 1),
@@ -178,7 +178,7 @@ ggplot(data, aes(x = Productivity_Change)) +
 
 Initially, we used a standard distribution graph to depict our binary data. However, we soon realized that this was an incorrect choice, as binary values do not follow a continuous distribution. Instead, they require a discrete representation such as a bar chart or a specialized binary plot which accurately captured the nature of 0s and 1s. As illustrated in the graph, 4,978 participants reported no change in their productivity, whereas 5,022 reported experiencing a change during the pandemic. Although these results are quite close, they suggest a nearly even split between individuals who felt a shift in productivity and those who did not. We will delve deeper into these we will further see where the changes occur. Now, let's see the Stress_Level:
 
-```{r}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 ggplot(data, aes(x = factor(Stress_Level, levels = c("Low", "Medium", "High")))) +
   geom_bar(
     fill = "skyblue", 
@@ -212,8 +212,92 @@ The Stress_Level variable is different from the Productivity_Change variable in 
 
 ## Results
 
-Question 4 explanation: From the analysis, employees experiencing medium stress levels appear to benefit the most from remote work, as indicated by a higher average productivity change 0.507 compared to those not working remotely 0.484. This outcome may stem from remote work’s flexibility and improved work life balance, which can alleviate moderate stress. However, for high stress employees, working remotely coincides with slightly lower productivity 0.495 versus in-person 0.525. This suggests that highly stressed employees might need immediate, structured support or resources not as readily available in remote settings. In contrast, for low stress employees, productivity outcomes are nearly the same between remote 0.501 and in person 0.51 work conditions, indicating that their overall performance is less sensitive to work location.
+#### Question 3: What is the impact of working from home on productivity change?
+
+##### Stress Level & Working from Home:
+
+##### Sector:
+
+##### Sector & Working from Home:
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+data <- data %>%
+  mutate(
+    Work_From_Home = as.numeric(Work_From_Home),
+    Productivity_Change = as.numeric(Productivity_Change)
+  )
+
+# Segmentation analysis: Count of Productivity Change by Sector & Work From Home
+if (all(c("Sector", "Work_From_Home", "Productivity_Change") %in% colnames(data))) {
+
+# Group data by Sector and Work_From_Home
+  segmentation_analysis <- data %>%
+    filter(Productivity_Change == 1) %>%  # Only include individuals with productivity change
+    group_by(Sector, Work_From_Home) %>%
+    summarise(
+      Count = n(),  # Count the number of individuals with a change
+      .groups = "drop"
+    )
+
+# Split the data into two subsets: Work From Home (1) and Not Work From Home (0)
+  work_from_home <- segmentation_analysis %>% filter(Work_From_Home == 1)
+  not_work_from_home <- segmentation_analysis %>% filter(Work_From_Home == 0)
+
+# Plot: Number of Individuals (Work From Home) - Zoom in to 950-1050
+  plot_work_from_home <- ggplot(work_from_home, aes(x = Sector, y = Count, fill = Sector)) +
+    geom_col(width = 0.6, color = "black") +
+    geom_text(aes(label = Count), vjust = -0.5, size = 3) +
+    coord_cartesian(ylim = c(950, 1050)) +  # Zoom in on y-axis for 950-1050
+    labs(
+      title = "Number of Individuals with Productivity Change (Work From Home)",
+      x = "Sector",
+      y = "Number of Individuals"
+    ) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Plot: Number of Individuals (Not Working From Home) - Zoom in to 200-300
+  plot_not_work_from_home <- ggplot(not_work_from_home, aes(x = Sector, y = Count, fill = Sector)) +
+    geom_col(width = 0.6, color = "black") +
+    geom_text(aes(label = Count), vjust = -0.5, size = 3) +
+    coord_cartesian(ylim = c(200, 300)) +  # Zoom in on y-axis for 200-300
+    labs(
+      title = "Number of Individuals with Productivity Change (Not Working From Home)",
+      x = "Sector",
+      y = "Number of Individuals"
+    ) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Display the plots
+  print(plot_work_from_home)
+  cat("\n\n\n")
+  print(plot_not_work_from_home)
+}
+```
+
+The analysis shows that the number of reported productivity changes varies by sector and work arrangement. Across all sectors, remote workers report significantly more changes than on-site workers, suggesting greater shifts in remote environments. For example, in IT, 1,023 remote employees reported changes compared to 238 on-site, while in Education, the split is 997 remote versus 225 on-site.
+
+Sector differences are also notable. IT and Education report the highest number of changes, reflecting greater disruption. In contrast, Retail and Healthcare show fewer reported changes overall, with 982 remote and 265 on-site for Retail, and 996 remote and 252 on-site for Healthcare. This suggests a higher degree of resilience or stability in these sectors during the pandemic.
+
+Overall, fewer reported changes, particularly among on-site workers and resilient sectors like Retail and Healthcare, indicate greater stability during pandemic-like disruptions.
+
+##### Childcare Responsibilities & Working from Home:
+
+##### Health Issues & Working from Home:
+
+#### Question 4: Are there significant correlations between productivity_change and other numeric variables?
+
+From the analysis, employees experiencing medium stress levels appear to benefit the most from remote work, as indicated by a higher average productivity change 0.507 compared to those not working remotely 0.484. This outcome may stem from remote work’s flexibility and improved work life balance, which can alleviate moderate stress. However, for high stress employees, working remotely coincides with slightly lower productivity 0.495 versus in-person 0.525. This suggests that highly stressed employees might need immediate, structured support or resources not as readily available in remote settings. In contrast, for low stress employees, productivity outcomes are nearly the same between remote 0.501 and in person 0.51 work conditions, indicating that their overall performance is less sensitive to work location.
+
+#### Question 5: Do employees who experienced salary cuts show different productivity trends compared to those with stable salaries?
+
+#### Question 6: What was the impact of Childcare Responsibilities, Commuting Changes, and Health Issues on Technology Adaptation Levels
 
 ## Conclusion
+
+#### Question 7: What are the key takeaways or recommendations based on our analysis?
+
+#### Question 8: What can we improve if this analysis were conducted again?
 
 In conclusion, our analysis on the impact that COVID had on people's work lives has revealed how well prepared and un-prepared society is for pandemic-like events. We have also confirmed what works best and what doesn't when attempting to adapt to such events.
