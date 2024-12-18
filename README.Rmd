@@ -19,7 +19,7 @@ To achieve this objective, we will explore the following questions:
 
 1. What cleaning methods were applied, and why?
 
-2. What is the distribution of the Productivity_Change Variable?
+2. What is the distribution of the "Productivity_Change" and "Stress_Level" Variables?
 
 3. What is the impact of working from home on productivity change?
 -   Stress Level & Working from Home
@@ -44,7 +44,7 @@ These are the primary questions we seek to answer in this final project. From th
 ### Structure
     The link to the data set is the following: https://www.kaggle.com/datasets/willianoliveiragibin/covid-19-on-working-professionals/data. The Kaggle website constains a CSV file containing all the data collected to detail the impact COVID had on people's work lives. There are 15 columns for 15 variables, where each variable describes a different aspect of work and whether or not it has had any change or effect from COVID. All of the data-points are neatly organized into one CSV file, where there are exactly 10,000 rows.
 
-    One of the most important things to note about this dataset is that fact that most of the variables report their data in a binary format. In other words, most of the data is listed in 0's and 1's, where 0 conveys that the given data-point has not been effected or changed for its given variable/column while 1 conveys that it has. Although this may seem subtle, this has lead to a variety of issues and mis-interpretations throughout this project, which have been since fixed of course. 
+    One of the most important things to note about this dataset is that fact that most of the variables report their data in a binary format. In other words, most of the data is listed in 0's and 1's, where 0 conveys that the given data-point has not been effected or changed for its given variable/column, while 1 conveys that it has. Although this may seem subtle, this has lead to a variety of issues and mis-interpretations throughout this project, which have been since fixed of course. 
 
     Where normally graphs depict the amount of change a variable has had, binary-based variables will depict whether or not there was any change and how much of the data has changed. When it comes to this project specifically, this is actually a valid approach as all we need to see is what variables changed in response to COVID-19. The variables that had less change indicate that they are more resilient and are of less worry, whereas the variables that have a higher proportion of change are the ones that indicate the need for more caution and preparation.
 
@@ -86,13 +86,45 @@ This code snippet reveals the structure of the Dataset. Some key things to note 
 summary(data)  # Summary statistics
 ```
 
-The summary statistics tells us quite a few things. One of the key pieces of information to take away is the proportion of data-points that were effected by their respective variables. This mainly applies to the binary/numeric variable types as the character types simply list that they are characters. The binary types, on the other hand, show their mean values, which represents the proportion of data that was effected in their column. For example, the "Job_Security" column lists a 0.4049 value for the mean, which means that around 40% of the people in the data set experinced and impact or change to their job securities during the impact. This indicates that job securtity was more stable than not for the average person during the pandemic. In contrast, "Team_Collaboration_Challenges" lists a mean value of 0.7006, meaning that 70% of people in the dataset experinced team collaboration challenges, indicating that this aspect is vulnerable to Pandmeic-like events. Overall, this information alone provides valuable insights and can allow society to better prepare for future events.
+The summary statistics tells us quite a few things. One of the key pieces of information to take away is the proportion of data-points that were effected by their respective variables. This mainly applies to the binary/numeric variable types as the character types simply list that they are characters. The binary types, on the other hand, show their mean values, which represents the proportion of data that was effected in their column. For example, the "Job_Security" column lists a 0.4049 value for the mean, which means that around 40% of the people in the data set experienced and impact or change to their job securities during the impact. This indicates that job securtity was more stable than not for the average person during the pandemic. In contrast, "Team_Collaboration_Challenges" lists a mean value of 0.7006, meaning that 70% of people in the dataset experinced team collaboration challenges, indicating that this aspect is vulnerable to Pandmeic-like events. Overall, this information alone provides valuable insights and can allow society to better prepare for future events.
 
 ```{r}
 colSums(is.na(data)) # Check missing values
 ```
 
 As shown here, all the columns have a 0 for null values, which means that there are no empty values in any column. This means that we will not have to worry about accounting for null values during the data cleaning process.
+
+```{r}
+unique(data)
+```
+
+After a check for unique values, it is evident that there is an issue with the columns "Hours_Worked_Per_Day" and "Meetings_Per_Day" as their values do not align with typical numbers. However, the other columns seem to have their proper data types and range of values.
+
+#### Question 1: What cleaning methods were applied, and why
+
+From the information listed above, we realized that not much Data Cleaning is necessary for the dataset: the binaary values are all already listed as doubles, where numerics fall under; the verbal columns have the proper "character" data type; the null check shows 0 null values for all columns, which means we do not need to perform any substitution or data removal; and lastly, from the unique input types, except the Hours_Worked_Per_Day and Meetings_Per_Day columns, all column indicate that they only have the data types they should have, such as binary variables only have binary types. That of course leaves us with the need to fix the Hours_Worked_Per_Day and Meetings_Per_Day columns. The way the data is inputed in these columns is very interesting; it is most likely formatted in a different countries numeric system, especially with the number of decimals - ex. "6.392.393.639.805.820". At first, we thought that maybe each input was representing multiple days of the week per person, but the column explicitly states "Hours_Worked_Per_Day" or "Meetings_Per_Day" implying each input describes the value per day. This means that something like hours should range from 0-24 hours, which made us to believe that the data was inputted without any sort of rounding, resulting in the long floating values we see. However, after even further analysis, we found a negative value inputted into the "Meetings_Per_Day" column: -5.829.769.194.792.650. At this point, we could not find any reasoning or explanattion that clarifies how this value could exist; it is not possible to have negative meetings in a day. With seeing the unsusally decimal input and the anomoly of negative meetings, we finally decided that it was best to completely remove both these columns from the dataset as it was evident that they were corrupted.
+
+```{r}
+# Remove the two problematic columns
+data <- data[, !(colnames(data) %in% c("Hours_Worked_Per_Day", "Meetings_Per_Day"))]
+
+# Confirm the columns have been removed
+print(colnames(data))
+```
+
+As shown, we no longer have the problematic columns and are left with 13 variables for 13 columns.
+
+```{r}
+# Re-confirm unique types
+# Loop through each column and print unique values
+for (col in colnames(data)) {
+  cat("Unique values in", col, ":\n")
+  print(unique(data[[col]]))
+  cat("----------------------\n")
+}
+```
+
+As shown above, each column lists the unique values that we expect to see, where binary variables only have 0's and 1's, as they should, while the character variables have their proper resepctive labels. At this point, the data has been cleaned and we are ready to proceed with further analysis.
 
 ### Variables
 
@@ -103,10 +135,6 @@ As shown here, all the columns have a 0 for null values, which means that there 
 - Increased_Work_Hours: A binary variable (1/0) indicating whether the employee experienced an increase in work hours.
 
 - Work_From_Home: A binary variable (1/0) showing whether the employee is working from home.
-
-- Hours_Worked_Per_Day: Captures the number of hours the employee works in a day, though the values in the sample data need cleaning.
-
-- Meetings_Per_Day: Represents the number of meetings the employee attends per day, though concatenated values in the sample require cleaning.
 
 - Productivity_Change: A binary variable (1/0) indicating whether the employee experienced a change in productivity.
 
@@ -128,11 +156,148 @@ As shown here, all the columns have a 0 for null values, which means that there 
 
 Although we use most of these variables througout this analysis, our variables of focus are going to be the "Productivity_Change" and "Stress_Level" since these variables will tell us how society is doing as a whole as they reflect the state of the people.
 
+#### Question 2: What is the distribution of the "Productivity_Change" and "Stress_Level" Variables?
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Convert Productivity_Change to a factor
+data$Productivity_Change <- factor(data$Productivity_Change, 
+                                   levels = c(0, 1),
+                                   labels = c("No Change", "Change"))
+
+ggplot(data, aes(x = Productivity_Change)) +
+  geom_bar(fill = "steelblue", color = "black", width = 0.5) +  # Narrow bars
+  geom_text(stat = "count", aes(label = ..count..), 
+            vjust = -0.5, size = 4) +  # Add counts on top of bars
+  coord_cartesian(ylim = c(4950, 5050)) +  # Zoom in on y-axis
+  labs(
+    title = "Distribution of Productivity Change",
+    x = "Productivity Change",
+    y = "Count"
+  ) +
+  theme_minimal()
+```
+
+Initially, we used a standard distribution graph to depict our binary data. However, we soon realized that this was an incorrect choice, as binary values do not follow a continuous distribution. Instead, they require a discrete representation such as a bar chart or a specialized binary plot which accurately captured the nature of 0s and 1s. As illustrated in the graph, 4,978 participants reported no change in their productivity, whereas 5,022 reported experiencing a change during the pandemic. Although these results are quite close, they suggest a nearly even split between individuals who felt a shift in productivity and those who did not. We will delve deeper into these we will further see where the changes occur. Now, let's see the Stress_Level:
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(data, aes(x = factor(Stress_Level, levels = c("Low", "Medium", "High")))) +
+  geom_bar(
+    fill = "skyblue", 
+    color = "black", 
+    width = 0.6  # Adjust bar width (spacing between bars)
+  ) +
+  geom_text(
+    stat = 'count',
+    aes(label = ..count..),  # Display counts on top of bars
+    vjust = -0.5,            # Adjust position above bars
+    size = 4                 # Text size
+  ) +
+  labs(
+    title = "Distribution of Stress Levels",
+    x = "Stress Level",
+    y = "Count"
+  ) +
+  scale_y_continuous(
+    breaks = seq(0, 5000, by = 1000),  # Y-axis increments by 1,000
+    limits = c(0, 5000)               # Set maximum to 5,000
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    axis.text.x = element_text(size = 12, margin = margin(t = 5)),
+    axis.text.y = element_text(size = 12, margin = margin(r = 5)),
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold")
+  )
+```
+
+The Stress_Level variable is different from the Productivity_Change variable in that it is not binary, but rather categorical. It made the most sense to proceeed with a bar graph as we could depict each state of stress and the number of people for each. The distribution indicates that most people reported being at a medium stress level during the Pandemic, which is what we expected. We will further analyze the dataset to find out the effects of such stress levels, what causes them, and what methods work in events like pandemics to minimize stress.
+
 ## Results
 
+#### Question 3: What is the impact of working from home on productivity change?
 
+##### Stress Level & Working from Home:
 
+##### Sector:
+
+##### Sector & Working from Home:
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+data <- data %>%
+  mutate(
+    Work_From_Home = as.numeric(Work_From_Home),
+    Productivity_Change = as.numeric(Productivity_Change)
+  )
+
+# Segmentation analysis: Count of Productivity Change by Sector & Work From Home
+if (all(c("Sector", "Work_From_Home", "Productivity_Change") %in% colnames(data))) {
+
+# Group data by Sector and Work_From_Home
+  segmentation_analysis <- data %>%
+    filter(Productivity_Change == 1) %>%  # Only include individuals with productivity change
+    group_by(Sector, Work_From_Home) %>%
+    summarise(
+      Count = n(),  # Count the number of individuals with a change
+      .groups = "drop"
+    )
+
+# Split the data into two subsets: Work From Home (1) and Not Work From Home (0)
+  work_from_home <- segmentation_analysis %>% filter(Work_From_Home == 1)
+  not_work_from_home <- segmentation_analysis %>% filter(Work_From_Home == 0)
+
+# Plot: Number of Individuals (Work From Home) - Zoom in to 950-1050
+  plot_work_from_home <- ggplot(work_from_home, aes(x = Sector, y = Count, fill = Sector)) +
+    geom_col(width = 0.6, color = "black") +
+    geom_text(aes(label = Count), vjust = -0.5, size = 3) +
+    coord_cartesian(ylim = c(950, 1050)) +  # Zoom in on y-axis for 950-1050
+    labs(
+      title = "Number of Individuals with Productivity Change (Work From Home)",
+      x = "Sector",
+      y = "Number of Individuals"
+    ) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Plot: Number of Individuals (Not Working From Home) - Zoom in to 200-300
+  plot_not_work_from_home <- ggplot(not_work_from_home, aes(x = Sector, y = Count, fill = Sector)) +
+    geom_col(width = 0.6, color = "black") +
+    geom_text(aes(label = Count), vjust = -0.5, size = 3) +
+    coord_cartesian(ylim = c(200, 300)) +  # Zoom in on y-axis for 200-300
+    labs(
+      title = "Number of Individuals with Productivity Change (Not Working From Home)",
+      x = "Sector",
+      y = "Number of Individuals"
+    ) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Display the plots
+  print(plot_work_from_home)
+  cat("\n\n\n")
+  print(plot_not_work_from_home)
+}
+```
+
+The analysis shows that the number of reported productivity changes varies by sector and work arrangement. Across all sectors, remote workers report significantly more changes than on-site workers, suggesting greater shifts in remote environments. For example, in IT, 1,023 remote employees reported changes compared to 238 on-site, while in Education, the split is 997 remote versus 225 on-site.
+
+Sector differences are also notable. IT and Education report the highest number of changes, reflecting greater disruption. In contrast, Retail and Healthcare show fewer reported changes overall, with 982 remote and 265 on-site for Retail, and 996 remote and 252 on-site for Healthcare. This suggests a higher degree of resilience or stability in these sectors during the pandemic.
+
+Overall, fewer reported changes, particularly among on-site workers and resilient sectors like Retail and Healthcare, indicate greater stability during pandemic-like disruptions.
+
+##### Childcare Responsibilities & Working from Home:
+
+##### Health Issues & Working from Home:
+
+#### Question 4: Are there significant correlations between productivity_change and other numeric variables?
+
+From the analysis, employees experiencing medium stress levels appear to benefit the most from remote work, as indicated by a higher average productivity change 0.507 compared to those not working remotely 0.484. This outcome may stem from remote work’s flexibility and improved work life balance, which can alleviate moderate stress. However, for high stress employees, working remotely coincides with slightly lower productivity 0.495 versus in-person 0.525. This suggests that highly stressed employees might need immediate, structured support or resources not as readily available in remote settings. In contrast, for low stress employees, productivity outcomes are nearly the same between remote 0.501 and in person 0.51 work conditions, indicating that their overall performance is less sensitive to work location.
+
+#### Question 5: Do employees who experienced salary cuts show different productivity trends compared to those with stable salaries?
+
+#### Question 6: What was the impact of Childcare Responsibilities, Commuting Changes, and Health Issues on Technology Adaptation Levels
 
 ## Conclusion
+
+#### Question 7: What are the key takeaways or recommendations based on our analysis?
+
+#### Question 8: What can we improve if this analysis were conducted again?
 
 In conclusion, our analysis on the impact that COVID had on people's work lives has revealed how well prepared and un-prepared society is for pandemic-like events. We have also confirmed what works best and what doesn't when attempting to adapt to such events.
