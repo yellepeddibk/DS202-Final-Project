@@ -443,13 +443,23 @@ what methods work in events like pandemics to minimize stress.
 
 ##### Stress Level & Working from Home:
 
+![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+The graph shows the distribution of stress levels among employees,
+segmented by their work arrangement (working from home or on-site).
+Employees with medium stress levels make up the largest group, with a
+significant portion working from home. While a higher count of remote
+workers is seen across all stress levels, the graph does not suggest
+that working from home causes increased stress. Instead, it highlights
+the prevalence of stress levels regardless of work arrangement.
+
 ##### Sector:
 
 ##### Sector & Working from Home:
 
-![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
-![](README_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-13-2.png)<!-- -->
 
 The analysis shows that the number of reported productivity changes
 varies by sector and work arrangement. Across all sectors, remote
