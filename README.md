@@ -259,7 +259,7 @@ with the columns “Hours_Worked_Per_Day” and “Meetings_Per_Day” as their
 values do not align with typical numbers. However, the other columns
 seem to have their proper data types and range of values.
 
-#### Question 1: What cleaning methods were applied, and why
+#### Question 1: What cleaning methods were applied, and why?
 
 From the information listed above, we realized that not much Data
 Cleaning is necessary for the dataset: the binaary values are all
@@ -307,16 +307,6 @@ print(colnames(data))
 
 As shown, we no longer have the problematic columns and are left with 13
 variables for 13 columns.
-
-``` r
-# Re-confirm unique types
-# Loop through each column and print unique values
-for (col in colnames(data)) {
-  cat("Unique values in", col, ":\n")
-  print(unique(data[[col]]))
-  cat("----------------------\n")
-}
-```
 
     ## Unique values in Stress_Level :
     ## [1] "Low"    "Medium" "High"  

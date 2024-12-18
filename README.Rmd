@@ -100,7 +100,7 @@ unique(data)
 
 After a check for unique values, it is evident that there is an issue with the columns "Hours_Worked_Per_Day" and "Meetings_Per_Day" as their values do not align with typical numbers. However, the other columns seem to have their proper data types and range of values.
 
-#### Question 1: What cleaning methods were applied, and why
+#### Question 1: What cleaning methods were applied, and why?
 
 From the information listed above, we realized that not much Data Cleaning is necessary for the dataset: the binaary values are all already listed as doubles, where numerics fall under; the verbal columns have the proper "character" data type; the null check shows 0 null values for all columns, which means we do not need to perform any substitution or data removal; and lastly, from the unique input types, except the Hours_Worked_Per_Day and Meetings_Per_Day columns, all column indicate that they only have the data types they should have, such as binary variables only have binary types. That of course leaves us with the need to fix the Hours_Worked_Per_Day and Meetings_Per_Day columns. The way the data is inputed in these columns is very interesting; it is most likely formatted in a different countries numeric system, especially with the number of decimals - ex. "6.392.393.639.805.820". At first, we thought that maybe each input was representing multiple days of the week per person, but the column explicitly states "Hours_Worked_Per_Day" or "Meetings_Per_Day" implying each input describes the value per day. This means that something like hours should range from 0-24 hours, which made us to believe that the data was inputted without any sort of rounding, resulting in the long floating values we see. However, after even further analysis, we found a negative value inputted into the "Meetings_Per_Day" column: -5.829.769.194.792.650. At this point, we could not find any reasoning or explanattion that clarifies how this value could exist; it is not possible to have negative meetings in a day. With seeing the unsusally decimal input and the anomoly of negative meetings, we finally decided that it was best to completely remove both these columns from the dataset as it was evident that they were corrupted.
 
@@ -114,7 +114,7 @@ print(colnames(data))
 
 As shown, we no longer have the problematic columns and are left with 13 variables for 13 columns.
 
-```{r}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 # Re-confirm unique types
 # Loop through each column and print unique values
 for (col in colnames(data)) {

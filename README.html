@@ -823,7 +823,7 @@ with the columns “Hours_Worked_Per_Day” and “Meetings_Per_Day” as their
 values do not align with typical numbers. However, the other columns
 seem to have their proper data types and range of values.</p>
 <h4 id="question-1-what-cleaning-methods-were-applied-and-why">Question
-1: What cleaning methods were applied, and why</h4>
+1: What cleaning methods were applied, and why?</h4>
 <p>From the information listed above, we realized that not much Data
 Cleaning is necessary for the dataset: the binaary values are all
 already listed as doubles, where numerics fall under; the verbal columns
@@ -865,13 +865,6 @@ dataset as it was evident that they were corrupted.</p>
 ## [13] &quot;Affected_by_Covid&quot;</code></pre>
 <p>As shown, we no longer have the problematic columns and are left with
 13 variables for 13 columns.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="co"># Re-confirm unique types</span></span>
-<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a><span class="co"># Loop through each column and print unique values</span></span>
-<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a><span class="cf">for</span> (col <span class="cf">in</span> <span class="fu">colnames</span>(data)) {</span>
-<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Unique values in&quot;</span>, col, <span class="st">&quot;:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">unique</span>(data[[col]]))</span>
-<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;----------------------</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a>}</span></code></pre></div>
 <pre><code>## Unique values in Stress_Level :
 ## [1] &quot;Low&quot;    &quot;Medium&quot; &quot;High&quot;  
 ## ----------------------
