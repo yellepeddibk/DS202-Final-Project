@@ -1,11 +1,7 @@
 ---
 title: 'Final Project'
 author: "Bhargav Yellepeddi, Neel Rajan, Ananya Ramji, Amaya Bayoumi"
-<<<<<<< HEAD
-date: "12/02/2024"
-=======
 date: "12/17/2024"
->>>>>>> a688a5779403a1e88d83146fdb17fdfbb3f4f9df
 output: html_document
 ---
 
@@ -180,6 +176,10 @@ ggplot(data, aes(x = Productivity_Change)) +
 ## Analysis
 #### Question 3: What is the impact of working from home on productivity change? - Stress Level & Working from Home
 ```{r}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
 # Check if required columns exist in the dataset
 if (all(c("Work_From_Home", "Productivity_Change", "Stress_Level", "Childcare_Responsibilities") %in% colnames(data))) {
   
@@ -231,6 +231,7 @@ if (all(c("Work_From_Home", "Productivity_Change", "Stress_Level", "Childcare_Re
     theme_minimal() +
     theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1), axis.title.x = element_text(size = 12))
 }
+
 
 ```
 
