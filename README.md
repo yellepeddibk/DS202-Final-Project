@@ -488,6 +488,19 @@ what methods work in events like pandemics to minimize stress.
 
 ## Results
 
+Question 4 explanation: From the analysis, employees experiencing medium
+stress levels appear to benefit the most from remote work, as indicated
+by a higher average productivity change 0.507 compared to those not
+working remotely 0.484. This outcome may stem from remote work’s
+flexibility and improved work life balance, which can alleviate moderate
+stress. However, for high stress employees, working remotely coincides
+with slightly lower productivity 0.495 versus in-person 0.525. This
+suggests that highly stressed employees might need immediate, structured
+support or resources not as readily available in remote settings. In
+contrast, for low stress employees, productivity outcomes are nearly the
+same between remote 0.501 and in person 0.51 work conditions, indicating
+that their overall performance is less sensitive to work location.
+
 ## Conclusion
 
 In conclusion, our analysis on the impact that COVID had on people’s
