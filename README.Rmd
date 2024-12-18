@@ -274,7 +274,6 @@ ggplot(sector_analysis, aes(x = reorder(Sector, -Average_Productivity_Change), y
 }
 ```
 
-
 The graph displays the average productivity change by sector during COVID-19. Education (0.508) and IT (0.505) report the highest changes, likely reflecting their ability to adapt quickly to remote work but also highlighting greater disruption. In contrast, Healthcare (0.500) and Retail (0.496) show lower average changes, suggesting these sectors maintained more stability or resilience during the pandemic, possibly due to the essential nature of their operations.
 
 ##### Sector & Working from Home:
@@ -342,6 +341,62 @@ Sector differences are also notable. IT and Education report the highest number 
 Overall, fewer reported changes, particularly among on-site workers and resilient sectors like Retail and Healthcare, indicate greater stability during pandemic-like disruptions.
 
 ##### Childcare Responsibilities & Working from Home:
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+if (all(c("Childcare_Responsibilities", "Work_From_Home", "Productivity_Change") %in% colnames(data))) {
+  # Perform analysis: Group by Work_From_Home and Childcare_Responsibilities
+  childcare_analysis <- data %>%
+    filter(Productivity_Change == 1) %>%  # Filter only individuals affected by productivity change
+    group_by(Work_From_Home, Childcare_Responsibilities) %>%
+    summarise(
+      Count = n(),  # Count the number of individuals
+      .groups = "drop"
+    )
+  
+  # Split data into two subsets: Work From Home (1) and Not Work From Home (0)
+  work_from_home <- childcare_analysis %>% filter(Work_From_Home == 1)
+  not_work_from_home <- childcare_analysis %>% filter(Work_From_Home == 0)
+  
+  # Plot: Work From Home
+  plot_work_from_home <- ggplot(work_from_home, aes(x = as.factor(Childcare_Responsibilities), y = Count, fill = as.factor(Childcare_Responsibilities))) +
+    geom_bar(stat = "identity", width = 0.5, color = "black", alpha = 0.8) +
+    geom_text(aes(label = Count), vjust = -0.5, size = 3) +
+    labs(
+      title = "Individuals Affected by Productivity and Childcare (Work From Home)",
+      x = "Childcare Responsibilities (0 = No, 1 = Yes)",
+      y = "Number of Individuals",
+      fill = "Childcare Responsibilities"
+    ) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(size = 10, angle = 0, hjust = 0.5))
+  
+  # Plot: Not Working From Home
+  plot_not_work_from_home <- ggplot(not_work_from_home, aes(x = as.factor(Childcare_Responsibilities), y = Count, fill = as.factor(Childcare_Responsibilities))) +
+    geom_bar(stat = "identity", width = 0.5, color = "black", alpha = 0.8) +
+    geom_text(aes(label = Count), vjust = -0.5, size = 3) +
+    labs(
+      title = "Individuals Affected by Productivity and Childcare (Not Working From Home)",
+      x = "Childcare Responsibilities (0 = No, 1 = Yes)",
+      y = "Number of Individuals",
+      fill = "Childcare Responsibilities"
+    ) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(size = 10, angle = 0, hjust = 0.5))
+  
+  # Display the plots
+  print(plot_work_from_home)
+  cat("\n\n\n")
+  print(plot_not_work_from_home)
+}
+```
+
+The graphs show the relationship between productivity changes and childcare responsibilities for employees working from home versus on-site.
+
+Among those working from home, individuals without childcare responsibilities (2,440) report significantly more productivity changes compared to those with childcare responsibilities (1,595). This suggests that balancing childcare while working remotely may reduce the likelihood of reported productivity changes.
+
+For those not working from home, the overall numbers are lower, likely because fewer employees worked on-site during the pandemic. However, a similar trend is observed: individuals without childcare responsibilities (592) report more productivity changes compared to those with childcare responsibilities (395).
+
+Overall, while fewer employees worked on-site, the data highlights that balancing childcare responsibilities, especially in remote work settings, may influence productivity.
 
 ##### Health Issues & Working from Home:
 

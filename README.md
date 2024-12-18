@@ -491,6 +491,30 @@ during pandemic-like disruptions.
 
 ##### Childcare Responsibilities & Working from Home:
 
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+
+![](README_files/figure-gfm/unnamed-chunk-15-2.png)<!-- -->
+
+The graphs show the relationship between productivity changes and
+childcare responsibilities for employees working from home versus
+on-site.
+
+Among those working from home, individuals without childcare
+responsibilities (2,440) report significantly more productivity changes
+compared to those with childcare responsibilities (1,595). This suggests
+that balancing childcare while working remotely may reduce the
+likelihood of reported productivity changes.
+
+For those not working from home, the overall numbers are lower, likely
+because fewer employees worked on-site during the pandemic. However, a
+similar trend is observed: individuals without childcare
+responsibilities (592) report more productivity changes compared to
+those with childcare responsibilities (395).
+
+Overall, while fewer employees worked on-site, the data highlights that
+balancing childcare responsibilities, especially in remote work
+settings, may influence productivity.
+
 ##### Health Issues & Working from Home:
 
 #### Question 4: Are there significant correlations between productivity_change and other numeric variables?
