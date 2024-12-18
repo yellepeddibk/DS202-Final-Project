@@ -799,9 +799,123 @@ can allow society to better prepare for future events.</p>
 that there are no empty values in any column. This means that we will
 not have to worry about accounting for null values during the data
 cleaning process.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">unique</span>(data)</span></code></pre></div>
+<pre><code>## # A tibble: 10,000 × 15
+##    Stress_Level Sector  Increased_Work_Hours Work_From_Home Hours_Worked_Per_Day
+##    &lt;chr&gt;        &lt;chr&gt;                  &lt;dbl&gt;          &lt;dbl&gt; &lt;chr&gt;               
+##  1 Low          Retail                     1              1 6.392.393.639.805.8…
+##  2 Low          IT                         1              1 9.171.983.537.957.5…
+##  3 Medium       Retail                     1              0 10.612.560.951.456.…
+##  4 Medium       Educat…                    1              1 5.546.168.647.409.5…
+##  5 Medium       Educat…                    0              1 11.424.615.456.733.…
+##  6 Low          IT                         1              1 7.742.897.931.229.7…
+##  7 Medium       IT                         0              0 6.049.957.230.122.9…
+##  8 High         Health…                    1              1 9.515.509.560.416.3…
+##  9 Medium       Educat…                    1              1 7.107.091.043.489.9…
+## 10 High         Educat…                    1              1 7.836.526.647.937.0…
+## # ℹ 9,990 more rows
+## # ℹ 10 more variables: Meetings_Per_Day &lt;chr&gt;, Productivity_Change &lt;dbl&gt;,
+## #   Health_Issue &lt;dbl&gt;, Job_Security &lt;dbl&gt;, Childcare_Responsibilities &lt;dbl&gt;,
+## #   Commuting_Changes &lt;dbl&gt;, Technology_Adaptation &lt;dbl&gt;, Salary_Changes &lt;dbl&gt;,
+## #   Team_Collaboration_Challenges &lt;dbl&gt;, Affected_by_Covid &lt;dbl&gt;</code></pre>
+<p>After a check for unique values, it is evident that there is an issue
+with the columns “Hours_Worked_Per_Day” and “Meetings_Per_Day” as their
+values do not align with typical numbers. However, the other columns
+seem to have their proper data types and range of values.</p>
 <h4 id="question-1-what-cleaning-methods-were-applied-and-why">Question
-1: What cleaning methods were applied, and why?</h4>
-<p>From the information listed above, we realized</p>
+1: What cleaning methods were applied, and why</h4>
+<p>From the information listed above, we realized that not much Data
+Cleaning is necessary for the dataset: the binaary values are all
+already listed as numeric; the verbal columns have the proper
+“character” data type; the null check shows 0 null values for all
+columns, which means we do not need to perform any substitution or data
+removal; and lastly, from the unique input types, except the
+Hours_Worked_Per_Day and Meetings_Per_Day columns, all column indicate
+that they only have the data types they should have, such as binary
+variables only have binary types. That of course leaves us with the need
+to fix the Hours_Worked_Per_Day and Meetings_Per_Day columns. The way
+the data is inputed in these columns is very interesting; it is most
+likely formatted in a different countries numeric system, especially
+with the number of decimals - ex. “6.392.393.639.805.820”. At first, we
+thought that maybe each input was representing multiple days of the week
+per person, but the column explicitly states “Hours_Worked_Per_Day” or
+“Meetings_Per_Day” implying each input describes the value per day. This
+means that something like hours should range from 0-24 hours, which made
+us to believe that the data was inputted without any sort of rounding,
+resulting in the long floating values we see. However, after even
+further analysis, we found a negative value inputted into the
+“Meetings_Per_Day” column: -5.829.769.194.792.650. At this point, we
+could not find any reasoning or explanattion that clarifies how this
+value could exist; it is not possible to have negative meetings in a
+day. With seeing the unsusally decimal input and the anomoly of negative
+meetings, we finally decided that it was best to completely remove both
+these columns from the dataset as it was evident that they were
+corrupted.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="co"># Remove the two problematic columns</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>data <span class="ot">&lt;-</span> data[, <span class="sc">!</span>(<span class="fu">colnames</span>(data) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;Hours_Worked_Per_Day&quot;</span>, <span class="st">&quot;Meetings_Per_Day&quot;</span>))]</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="co"># Confirm the columns have been removed</span></span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">colnames</span>(data))</span></code></pre></div>
+<pre><code>##  [1] &quot;Stress_Level&quot;                  &quot;Sector&quot;                       
+##  [3] &quot;Increased_Work_Hours&quot;          &quot;Work_From_Home&quot;               
+##  [5] &quot;Productivity_Change&quot;           &quot;Health_Issue&quot;                 
+##  [7] &quot;Job_Security&quot;                  &quot;Childcare_Responsibilities&quot;   
+##  [9] &quot;Commuting_Changes&quot;             &quot;Technology_Adaptation&quot;        
+## [11] &quot;Salary_Changes&quot;                &quot;Team_Collaboration_Challenges&quot;
+## [13] &quot;Affected_by_Covid&quot;</code></pre>
+<p>As shown, we no longer have the problematic columns and are left with
+13 variables for 13 columns.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="co"># Re-confirm unique types</span></span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a><span class="co"># Loop through each column and print unique values</span></span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a><span class="cf">for</span> (col <span class="cf">in</span> <span class="fu">colnames</span>(data)) {</span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Unique values in&quot;</span>, col, <span class="st">&quot;:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">unique</span>(data[[col]]))</span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;----------------------</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>## Unique values in Stress_Level :
+## [1] &quot;Low&quot;    &quot;Medium&quot; &quot;High&quot;  
+## ----------------------
+## Unique values in Sector :
+## [1] &quot;Retail&quot;     &quot;IT&quot;         &quot;Education&quot;  &quot;Healthcare&quot;
+## ----------------------
+## Unique values in Increased_Work_Hours :
+## [1] 1 0
+## ----------------------
+## Unique values in Work_From_Home :
+## [1] 1 0
+## ----------------------
+## Unique values in Productivity_Change :
+## [1] 1 0
+## ----------------------
+## Unique values in Health_Issue :
+## [1] 0 1
+## ----------------------
+## Unique values in Job_Security :
+## [1] 0 1
+## ----------------------
+## Unique values in Childcare_Responsibilities :
+## [1] 1 0
+## ----------------------
+## Unique values in Commuting_Changes :
+## [1] 1 0
+## ----------------------
+## Unique values in Technology_Adaptation :
+## [1] 1 0
+## ----------------------
+## Unique values in Salary_Changes :
+## [1] 0 1
+## ----------------------
+## Unique values in Team_Collaboration_Challenges :
+## [1] 1 0
+## ----------------------
+## Unique values in Affected_by_Covid :
+## [1] 1
+## ----------------------</code></pre>
+<p>As shown above, each column lists the unique values that we expect to
+see, where binary variables only have 0’s and 1’s, as they should, while
+the character variables have their proper resepctive labels. At this
+point, the data has been cleaned and we are ready to proceed with
+further analysis.</p>
 <h3 id="variables">Variables</h3>
 <ul>
 <li><p>Stress_Level: Indicates the employee’s stress level, categorized
@@ -812,12 +926,6 @@ which the employee works.</p></li>
 the employee experienced an increase in work hours.</p></li>
 <li><p>Work_From_Home: A binary variable (1/0) showing whether the
 employee is working from home.</p></li>
-<li><p>Hours_Worked_Per_Day: Captures the number of hours the employee
-works in a day, though the values in the sample data need
-cleaning.</p></li>
-<li><p>Meetings_Per_Day: Represents the number of meetings the employee
-attends per day, though concatenated values in the sample require
-cleaning.</p></li>
 <li><p>Productivity_Change: A binary variable (1/0) indicating whether
 the employee experienced a change in productivity.</p></li>
 <li><p>Health_Issue: A binary variable (1/0) denoting whether the
@@ -843,23 +951,23 @@ variables of focus are going to be the “Productivity_Change” and
 as a whole as they reflect the state of the people.</p>
 <h4 id="question-2-what-is-the-distribution-of-the-productivity_change-variable">Question
 2: What is the distribution of the Productivity_Change Variable?</h4>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># Convert Productivity_Change to a factor</span></span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>data<span class="sc">$</span>Productivity_Change <span class="ot">&lt;-</span> <span class="fu">factor</span>(data<span class="sc">$</span>Productivity_Change, </span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>                                   <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>                                   <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;No Change&quot;</span>, <span class="st">&quot;Change&quot;</span>))</span>
-<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a></span>
-<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> Productivity_Change)) <span class="sc">+</span></span>
-<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">&quot;steelblue&quot;</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">width =</span> <span class="fl">0.5</span>) <span class="sc">+</span>  <span class="co"># Narrow bars</span></span>
-<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">stat =</span> <span class="st">&quot;count&quot;</span>, <span class="fu">aes</span>(<span class="at">label =</span> ..count..), </span>
-<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a>            <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span>  <span class="co"># Add counts on top of bars</span></span>
-<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">4950</span>, <span class="dv">5050</span>)) <span class="sc">+</span>  <span class="co"># Zoom in on y-axis</span></span>
-<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Distribution of Productivity Change&quot;</span>,</span>
-<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Productivity Change&quot;</span>,</span>
-<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Count&quot;</span></span>
-<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
-<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="co"># Convert Productivity_Change to a factor</span></span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>data<span class="sc">$</span>Productivity_Change <span class="ot">&lt;-</span> <span class="fu">factor</span>(data<span class="sc">$</span>Productivity_Change, </span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>                                   <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>                                   <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;No Change&quot;</span>, <span class="st">&quot;Change&quot;</span>))</span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> Productivity_Change)) <span class="sc">+</span></span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">&quot;steelblue&quot;</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">width =</span> <span class="fl">0.5</span>) <span class="sc">+</span>  <span class="co"># Narrow bars</span></span>
+<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">stat =</span> <span class="st">&quot;count&quot;</span>, <span class="fu">aes</span>(<span class="at">label =</span> ..count..), </span>
+<span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a>            <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span>  <span class="co"># Add counts on top of bars</span></span>
+<span id="cb18-10"><a href="#cb18-10" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">4950</span>, <span class="dv">5050</span>)) <span class="sc">+</span>  <span class="co"># Zoom in on y-axis</span></span>
+<span id="cb18-11"><a href="#cb18-11" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb18-12"><a href="#cb18-12" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Distribution of Productivity Change&quot;</span>,</span>
+<span id="cb18-13"><a href="#cb18-13" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Productivity Change&quot;</span>,</span>
+<span id="cb18-14"><a href="#cb18-14" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Count&quot;</span></span>
+<span id="cb18-15"><a href="#cb18-15" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-16"><a href="#cb18-16" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
 <h2 id="results">Results</h2>
 <h2 id="conclusion">Conclusion</h2>
 <p>In conclusion, our analysis on the impact that COVID had on people’s

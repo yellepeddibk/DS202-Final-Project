@@ -230,9 +230,138 @@ that there are no empty values in any column. This means that we will
 not have to worry about accounting for null values during the data
 cleaning process.
 
-#### Question 1: What cleaning methods were applied, and why?
+``` r
+unique(data)
+```
 
-From the information listed above, we realized
+    ## # A tibble: 10,000 × 15
+    ##    Stress_Level Sector  Increased_Work_Hours Work_From_Home Hours_Worked_Per_Day
+    ##    <chr>        <chr>                  <dbl>          <dbl> <chr>               
+    ##  1 Low          Retail                     1              1 6.392.393.639.805.8…
+    ##  2 Low          IT                         1              1 9.171.983.537.957.5…
+    ##  3 Medium       Retail                     1              0 10.612.560.951.456.…
+    ##  4 Medium       Educat…                    1              1 5.546.168.647.409.5…
+    ##  5 Medium       Educat…                    0              1 11.424.615.456.733.…
+    ##  6 Low          IT                         1              1 7.742.897.931.229.7…
+    ##  7 Medium       IT                         0              0 6.049.957.230.122.9…
+    ##  8 High         Health…                    1              1 9.515.509.560.416.3…
+    ##  9 Medium       Educat…                    1              1 7.107.091.043.489.9…
+    ## 10 High         Educat…                    1              1 7.836.526.647.937.0…
+    ## # ℹ 9,990 more rows
+    ## # ℹ 10 more variables: Meetings_Per_Day <chr>, Productivity_Change <dbl>,
+    ## #   Health_Issue <dbl>, Job_Security <dbl>, Childcare_Responsibilities <dbl>,
+    ## #   Commuting_Changes <dbl>, Technology_Adaptation <dbl>, Salary_Changes <dbl>,
+    ## #   Team_Collaboration_Challenges <dbl>, Affected_by_Covid <dbl>
+
+After a check for unique values, it is evident that there is an issue
+with the columns “Hours_Worked_Per_Day” and “Meetings_Per_Day” as their
+values do not align with typical numbers. However, the other columns
+seem to have their proper data types and range of values.
+
+#### Question 1: What cleaning methods were applied, and why
+
+From the information listed above, we realized that not much Data
+Cleaning is necessary for the dataset: the binaary values are all
+already listed as numeric; the verbal columns have the proper
+“character” data type; the null check shows 0 null values for all
+columns, which means we do not need to perform any substitution or data
+removal; and lastly, from the unique input types, except the
+Hours_Worked_Per_Day and Meetings_Per_Day columns, all column indicate
+that they only have the data types they should have, such as binary
+variables only have binary types. That of course leaves us with the need
+to fix the Hours_Worked_Per_Day and Meetings_Per_Day columns. The way
+the data is inputed in these columns is very interesting; it is most
+likely formatted in a different countries numeric system, especially
+with the number of decimals - ex. “6.392.393.639.805.820”. At first, we
+thought that maybe each input was representing multiple days of the week
+per person, but the column explicitly states “Hours_Worked_Per_Day” or
+“Meetings_Per_Day” implying each input describes the value per day. This
+means that something like hours should range from 0-24 hours, which made
+us to believe that the data was inputted without any sort of rounding,
+resulting in the long floating values we see. However, after even
+further analysis, we found a negative value inputted into the
+“Meetings_Per_Day” column: -5.829.769.194.792.650. At this point, we
+could not find any reasoning or explanattion that clarifies how this
+value could exist; it is not possible to have negative meetings in a
+day. With seeing the unsusally decimal input and the anomoly of negative
+meetings, we finally decided that it was best to completely remove both
+these columns from the dataset as it was evident that they were
+corrupted.
+
+``` r
+# Remove the two problematic columns
+data <- data[, !(colnames(data) %in% c("Hours_Worked_Per_Day", "Meetings_Per_Day"))]
+
+# Confirm the columns have been removed
+print(colnames(data))
+```
+
+    ##  [1] "Stress_Level"                  "Sector"                       
+    ##  [3] "Increased_Work_Hours"          "Work_From_Home"               
+    ##  [5] "Productivity_Change"           "Health_Issue"                 
+    ##  [7] "Job_Security"                  "Childcare_Responsibilities"   
+    ##  [9] "Commuting_Changes"             "Technology_Adaptation"        
+    ## [11] "Salary_Changes"                "Team_Collaboration_Challenges"
+    ## [13] "Affected_by_Covid"
+
+As shown, we no longer have the problematic columns and are left with 13
+variables for 13 columns.
+
+``` r
+# Re-confirm unique types
+# Loop through each column and print unique values
+for (col in colnames(data)) {
+  cat("Unique values in", col, ":\n")
+  print(unique(data[[col]]))
+  cat("----------------------\n")
+}
+```
+
+    ## Unique values in Stress_Level :
+    ## [1] "Low"    "Medium" "High"  
+    ## ----------------------
+    ## Unique values in Sector :
+    ## [1] "Retail"     "IT"         "Education"  "Healthcare"
+    ## ----------------------
+    ## Unique values in Increased_Work_Hours :
+    ## [1] 1 0
+    ## ----------------------
+    ## Unique values in Work_From_Home :
+    ## [1] 1 0
+    ## ----------------------
+    ## Unique values in Productivity_Change :
+    ## [1] 1 0
+    ## ----------------------
+    ## Unique values in Health_Issue :
+    ## [1] 0 1
+    ## ----------------------
+    ## Unique values in Job_Security :
+    ## [1] 0 1
+    ## ----------------------
+    ## Unique values in Childcare_Responsibilities :
+    ## [1] 1 0
+    ## ----------------------
+    ## Unique values in Commuting_Changes :
+    ## [1] 1 0
+    ## ----------------------
+    ## Unique values in Technology_Adaptation :
+    ## [1] 1 0
+    ## ----------------------
+    ## Unique values in Salary_Changes :
+    ## [1] 0 1
+    ## ----------------------
+    ## Unique values in Team_Collaboration_Challenges :
+    ## [1] 1 0
+    ## ----------------------
+    ## Unique values in Affected_by_Covid :
+    ## [1] 1
+    ## ----------------------
+
+As shown above, each column lists the unique values that we expect to
+see, where binary variables only have 0’s and 1’s, as they should, while
+the character variables have their proper resepctive labels. At this
+point, the data has been cleaned and we are ready to proceed with
+further analysis.
 
 ### Variables
 
@@ -247,13 +376,6 @@ From the information listed above, we realized
 
 - Work_From_Home: A binary variable (1/0) showing whether the employee
   is working from home.
-
-- Hours_Worked_Per_Day: Captures the number of hours the employee works
-  in a day, though the values in the sample data need cleaning.
-
-- Meetings_Per_Day: Represents the number of meetings the employee
-  attends per day, though concatenated values in the sample require
-  cleaning.
 
 - Productivity_Change: A binary variable (1/0) indicating whether the
   employee experienced a change in productivity.
@@ -308,7 +430,7 @@ ggplot(data, aes(x = Productivity_Change)) +
   theme_minimal()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 ## Results
 
