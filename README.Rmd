@@ -292,6 +292,9 @@ From the analysis, employees experiencing medium stress levels appear to benefit
 
 #### Question 5: Do employees who experienced salary cuts show different productivity trends compared to those with stable salaries?
 
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+```
+
 #### Question 6: What was the impact of Childcare Responsibilities, Commuting Changes, and Health Issues on Technology Adaptation Levels
 
 ## Conclusion
