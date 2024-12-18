@@ -1,46 +1,165 @@
----
-title: 'Final Project'
-author: "Bhargav Yellepeddi, Neel Rajan, Ananya Ramji, Amaya Bayoumi"
-date: "12/17/2024"
-output: github_document
----
+Final Project
+================
+Bhargav Yellepeddi, Neel Rajan, Ananya Ramji, Amaya Bayoumi
+12/17/2024
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
-if (!requireNamespace("moments", quietly = TRUE)) {
-  install.packages("moments")
-}
-```
 ## Load and visualize data
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-# Load necessary libraries
-library(readr)
-library(ggplot2)
-library(moments)
-library(dplyr)
-library(tidyr)
-```
 
-```{r}
+``` r
 # Read the CSV file
 data <- read_csv("covid_impact_on_work new.csv")
+```
 
+    ## Rows: 10000 Columns: 15
+    ## ── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr  (4): Stress_Level, Sector, Hours_Worked_Per_Day, Meetings_Per_Day
+    ## dbl (11): Increased_Work_Hours, Work_From_Home, Productivity_Change, Health_...
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
 # View the data 
 head(data)
 ```
+
+    ## # A tibble: 6 × 15
+    ##   Stress_Level Sector   Increased_Work_Hours Work_From_Home Hours_Worked_Per_Day
+    ##   <chr>        <chr>                   <dbl>          <dbl> <chr>               
+    ## 1 Low          Retail                      1              1 6.392.393.639.805.8…
+    ## 2 Low          IT                          1              1 9.171.983.537.957.5…
+    ## 3 Medium       Retail                      1              0 10.612.560.951.456.…
+    ## 4 Medium       Educati…                    1              1 5.546.168.647.409.5…
+    ## 5 Medium       Educati…                    0              1 11.424.615.456.733.…
+    ## 6 Low          IT                          1              1 7.742.897.931.229.7…
+    ## # ℹ 10 more variables: Meetings_Per_Day <chr>, Productivity_Change <dbl>,
+    ## #   Health_Issue <dbl>, Job_Security <dbl>, Childcare_Responsibilities <dbl>,
+    ## #   Commuting_Changes <dbl>, Technology_Adaptation <dbl>, Salary_Changes <dbl>,
+    ## #   Team_Collaboration_Challenges <dbl>, Affected_by_Covid <dbl>
+
 ## Data Cleaning
+
 #### Overview the Data
-```{r}
+
+``` r
 # Inspect the dataset
 colnames(data) # View the column names to ensure proper references
+```
+
+    ##  [1] "Stress_Level"                  "Sector"                       
+    ##  [3] "Increased_Work_Hours"          "Work_From_Home"               
+    ##  [5] "Hours_Worked_Per_Day"          "Meetings_Per_Day"             
+    ##  [7] "Productivity_Change"           "Health_Issue"                 
+    ##  [9] "Job_Security"                  "Childcare_Responsibilities"   
+    ## [11] "Commuting_Changes"             "Technology_Adaptation"        
+    ## [13] "Salary_Changes"                "Team_Collaboration_Challenges"
+    ## [15] "Affected_by_Covid"
+
+``` r
 str(data)      # Structure of the data
+```
+
+    ## spc_tbl_ [10,000 × 15] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+    ##  $ Stress_Level                 : chr [1:10000] "Low" "Low" "Medium" "Medium" ...
+    ##  $ Sector                       : chr [1:10000] "Retail" "IT" "Retail" "Education" ...
+    ##  $ Increased_Work_Hours         : num [1:10000] 1 1 1 1 0 1 0 1 1 1 ...
+    ##  $ Work_From_Home               : num [1:10000] 1 1 0 1 1 1 0 1 1 1 ...
+    ##  $ Hours_Worked_Per_Day         : chr [1:10000] "6.392.393.639.805.820" "9.171.983.537.957.560" "10.612.560.951.456.400" "5.546.168.647.409.510" ...
+    ##  $ Meetings_Per_Day             : chr [1:10000] "26.845.944.014.488.700" "33.392.245.834.602.800" "2.218.332.712.302.110" "5.150.566.193.312.910" ...
+    ##  $ Productivity_Change          : num [1:10000] 1 1 0 0 1 1 0 0 0 0 ...
+    ##  $ Health_Issue                 : num [1:10000] 0 0 0 0 0 1 0 1 1 1 ...
+    ##  $ Job_Security                 : num [1:10000] 0 1 0 0 1 0 0 0 1 0 ...
+    ##  $ Childcare_Responsibilities   : num [1:10000] 1 0 0 0 1 1 1 0 0 1 ...
+    ##  $ Commuting_Changes            : num [1:10000] 1 1 0 1 1 1 0 1 0 1 ...
+    ##  $ Technology_Adaptation        : num [1:10000] 1 1 0 0 0 1 1 1 0 1 ...
+    ##  $ Salary_Changes               : num [1:10000] 0 0 0 0 1 0 0 0 0 0 ...
+    ##  $ Team_Collaboration_Challenges: num [1:10000] 1 1 0 0 1 1 1 1 1 1 ...
+    ##  $ Affected_by_Covid            : num [1:10000] 1 1 1 1 1 1 1 1 1 1 ...
+    ##  - attr(*, "spec")=
+    ##   .. cols(
+    ##   ..   Stress_Level = col_character(),
+    ##   ..   Sector = col_character(),
+    ##   ..   Increased_Work_Hours = col_double(),
+    ##   ..   Work_From_Home = col_double(),
+    ##   ..   Hours_Worked_Per_Day = col_character(),
+    ##   ..   Meetings_Per_Day = col_character(),
+    ##   ..   Productivity_Change = col_double(),
+    ##   ..   Health_Issue = col_double(),
+    ##   ..   Job_Security = col_double(),
+    ##   ..   Childcare_Responsibilities = col_double(),
+    ##   ..   Commuting_Changes = col_double(),
+    ##   ..   Technology_Adaptation = col_double(),
+    ##   ..   Salary_Changes = col_double(),
+    ##   ..   Team_Collaboration_Challenges = col_double(),
+    ##   ..   Affected_by_Covid = col_double()
+    ##   .. )
+    ##  - attr(*, "problems")=<externalptr>
+
+``` r
 summary(data)  # Summary statistics
+```
+
+    ##  Stress_Level          Sector          Increased_Work_Hours Work_From_Home  
+    ##  Length:10000       Length:10000       Min.   :0.0000       Min.   :0.0000  
+    ##  Class :character   Class :character   1st Qu.:0.0000       1st Qu.:1.0000  
+    ##  Mode  :character   Mode  :character   Median :1.0000       Median :1.0000  
+    ##                                        Mean   :0.6769       Mean   :0.8033  
+    ##                                        3rd Qu.:1.0000       3rd Qu.:1.0000  
+    ##                                        Max.   :1.0000       Max.   :1.0000  
+    ##  Hours_Worked_Per_Day Meetings_Per_Day   Productivity_Change  Health_Issue   
+    ##  Length:10000         Length:10000       Min.   :0.0000      Min.   :0.0000  
+    ##  Class :character     Class :character   1st Qu.:0.0000      1st Qu.:0.0000  
+    ##  Mode  :character     Mode  :character   Median :1.0000      Median :0.0000  
+    ##                                          Mean   :0.5022      Mean   :0.3011  
+    ##                                          3rd Qu.:1.0000      3rd Qu.:1.0000  
+    ##                                          Max.   :1.0000      Max.   :1.0000  
+    ##   Job_Security    Childcare_Responsibilities Commuting_Changes
+    ##  Min.   :0.0000   Min.   :0.0000             Min.   :0.0000   
+    ##  1st Qu.:0.0000   1st Qu.:0.0000             1st Qu.:0.0000   
+    ##  Median :0.0000   Median :0.0000             Median :1.0000   
+    ##  Mean   :0.4049   Mean   :0.3967             Mean   :0.5022   
+    ##  3rd Qu.:1.0000   3rd Qu.:1.0000             3rd Qu.:1.0000   
+    ##  Max.   :1.0000   Max.   :1.0000             Max.   :1.0000   
+    ##  Technology_Adaptation Salary_Changes   Team_Collaboration_Challenges
+    ##  Min.   :0.0000        Min.   :0.0000   Min.   :0.0000               
+    ##  1st Qu.:0.0000        1st Qu.:0.0000   1st Qu.:0.0000               
+    ##  Median :1.0000        Median :0.0000   Median :1.0000               
+    ##  Mean   :0.6051        Mean   :0.1948   Mean   :0.7006               
+    ##  3rd Qu.:1.0000        3rd Qu.:0.0000   3rd Qu.:1.0000               
+    ##  Max.   :1.0000        Max.   :1.0000   Max.   :1.0000               
+    ##  Affected_by_Covid
+    ##  Min.   :1        
+    ##  1st Qu.:1        
+    ##  Median :1        
+    ##  Mean   :1        
+    ##  3rd Qu.:1        
+    ##  Max.   :1
+
+``` r
 colSums(is.na(data)) # Check missing values
 ```
 
+    ##                  Stress_Level                        Sector 
+    ##                             0                             0 
+    ##          Increased_Work_Hours                Work_From_Home 
+    ##                             0                             0 
+    ##          Hours_Worked_Per_Day              Meetings_Per_Day 
+    ##                             0                             0 
+    ##           Productivity_Change                  Health_Issue 
+    ##                             0                             0 
+    ##                  Job_Security    Childcare_Responsibilities 
+    ##                             0                             0 
+    ##             Commuting_Changes         Technology_Adaptation 
+    ##                             0                             0 
+    ##                Salary_Changes Team_Collaboration_Challenges 
+    ##                             0                             0 
+    ##             Affected_by_Covid 
+    ##                             0
+
 #### Fix Null Values, Column Names, and Data Types
-```{r}
+
+``` r
 ## Handle missing values in Productivity_Change
 if ("Productivity_Change" %in% colnames(data)) {
   if (!is.numeric(data$Productivity_Change)) {
@@ -78,23 +197,69 @@ data_clean <- data[!duplicated(data), ]
 summary(data_clean)
 ```
 
+    ##  Stress_Level          Sector          Increased_Work_Hours Work_From_Home  
+    ##  Length:10000       Length:10000       Min.   :0.0000       Min.   :0.0000  
+    ##  Class :character   Class :character   1st Qu.:0.0000       1st Qu.:1.0000  
+    ##  Mode  :character   Mode  :character   Median :1.0000       Median :1.0000  
+    ##                                        Mean   :0.6769       Mean   :0.8033  
+    ##                                        3rd Qu.:1.0000       3rd Qu.:1.0000  
+    ##                                        Max.   :1.0000       Max.   :1.0000  
+    ##  Hours_Worked_Per_Day Meetings_Per_Day   Productivity_Change  Health_Issue   
+    ##  Length:10000         Length:10000       Min.   :0.0000      Min.   :0.0000  
+    ##  Class :character     Class :character   1st Qu.:0.0000      1st Qu.:0.0000  
+    ##  Mode  :character     Mode  :character   Median :1.0000      Median :0.0000  
+    ##                                          Mean   :0.5022      Mean   :0.3011  
+    ##                                          3rd Qu.:1.0000      3rd Qu.:1.0000  
+    ##                                          Max.   :1.0000      Max.   :1.0000  
+    ##   Job_Security    Childcare_Responsibilities Commuting_Changes
+    ##  Min.   :0.0000   Min.   :0.0000             Min.   :0.0000   
+    ##  1st Qu.:0.0000   1st Qu.:0.0000             1st Qu.:0.0000   
+    ##  Median :0.0000   Median :0.0000             Median :1.0000   
+    ##  Mean   :0.4049   Mean   :0.3967             Mean   :0.5022   
+    ##  3rd Qu.:1.0000   3rd Qu.:1.0000             3rd Qu.:1.0000   
+    ##  Max.   :1.0000   Max.   :1.0000             Max.   :1.0000   
+    ##  Technology_Adaptation Salary_Changes   Team_Collaboration_Challenges
+    ##  Min.   :0.0000        Min.   :0.0000   Min.   :0.0000               
+    ##  1st Qu.:0.0000        1st Qu.:0.0000   1st Qu.:0.0000               
+    ##  Median :1.0000        Median :0.0000   Median :1.0000               
+    ##  Mean   :0.6051        Mean   :0.1948   Mean   :0.7006               
+    ##  3rd Qu.:1.0000        3rd Qu.:0.0000   3rd Qu.:1.0000               
+    ##  Max.   :1.0000        Max.   :1.0000   Max.   :1.0000               
+    ##  Affected_by_Covid
+    ##  Min.   :1        
+    ##  1st Qu.:1        
+    ##  Median :1        
+    ##  Mean   :1        
+    ##  3rd Qu.:1        
+    ##  Max.   :1
+
 #### Question 1: What cleaning methods were applied, and why?
-```{r}
+
+``` r
 # The data cleaning process involved several key steps to ensure accuracy and consistency. Missing values in Productivity_Change were replaced with the mean, while missing values in categorical data like Work_From_Home were replaced with the mode to preserve dataset integrity. The Productivity_Change column was converted to numeric format to enable accurate calculations, and duplicates were removed to avoid over-representation. Outliers were identified using the IQR method, ensuring their impact could be assessed in the analysis. Rows with invalid or missing values in critical columns were filtered out to maintain data reliability. These steps ensured a clean dataset, enabling accurate trend analysis and clear visualizations of productivity changes across factors such as sector, work arrangements, stress levels, and childcare responsibilities.
 ```
 
 ## Dataset Facts
-```{r}
+
+``` r
 # Size:
 dataset_size <- dim(data)  # Dimensions of the dataset: [rows, columns]
 
 # Display dataset size
 cat("Number of rows (observations):", dataset_size[1], "\n")
+```
+
+    ## Number of rows (observations): 10000
+
+``` r
 cat("Number of columns (variables):", dataset_size[2], "\n")
 ```
 
+    ## Number of columns (variables): 15
+
 #### Outliers:
-```{r}
+
+``` r
 # Function to identify and flag outliers using the IQR method
 flag_outliers <- function(column) {
   Q1 <- quantile(column, 0.25, na.rm = TRUE)
@@ -136,8 +301,11 @@ if (nrow(long_data) > 0) {
 }
 ```
 
+![](analysis_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
 #### Outliers Summary Table:
-```{r}
+
+``` r
 summary_stats <- long_data %>%
   group_by(Variable) %>%
   summarise(
@@ -152,9 +320,24 @@ summary_stats <- long_data %>%
 print(summary_stats)
 ```
 
+    ## # A tibble: 11 × 8
+    ##    Variable               Mean Median    SD   Min   Max Num_Outliers Total_Count
+    ##    <chr>                 <dbl>  <dbl> <dbl> <dbl> <dbl>        <int>       <int>
+    ##  1 Affected_by_Covid     1          1 0         1     1            0       10000
+    ##  2 Childcare_Responsibi… 0.397      0 0.489     0     1            0       10000
+    ##  3 Commuting_Changes     0.502      1 0.500     0     1            0       10000
+    ##  4 Health_Issue          0.301      0 0.459     0     1            0       10000
+    ##  5 Increased_Work_Hours  0.677      1 0.468     0     1            0       10000
+    ##  6 Job_Security          0.405      0 0.491     0     1            0       10000
+    ##  7 Productivity_Change   0.502      1 0.500     0     1            0       10000
+    ##  8 Salary_Changes        0.195      0 0.396     0     1         1948       10000
+    ##  9 Team_Collaboration_C… 0.701      1 0.458     0     1            0       10000
+    ## 10 Technology_Adaptation 0.605      1 0.489     0     1            0       10000
+    ## 11 Work_From_Home        0.803      1 0.398     0     1         1967       10000
 
 #### Question 2: What is the distribution of the Productivity_Change Variable?
-```{r}
+
+``` r
 # Convert Productivity_Change to a factor
 data$Productivity_Change <- factor(data$Productivity_Change, 
                                    levels = c(0, 1),
@@ -173,9 +356,18 @@ ggplot(data, aes(x = Productivity_Change)) +
   theme_minimal()
 ```
 
+    ## Warning: The dot-dot notation (`..count..`) was deprecated in ggplot2 3.4.0.
+    ## ℹ Please use `after_stat(count)` instead.
+    ## This warning is displayed once every 8 hours.
+    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
+
+![](analysis_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
 ## Analysis
+
 #### Question 3: What is the impact of working from home on productivity change? - Stress Level & Working from Home
-```{r}
+
+``` r
 library(dplyr)
 library(tidyr)
 library(ggplot2)
@@ -231,12 +423,33 @@ if (all(c("Work_From_Home", "Productivity_Change", "Stress_Level", "Childcare_Re
     theme_minimal() +
     theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1), axis.title.x = element_text(size = 12))
 }
-
-
 ```
 
-#### Question 3: What is the impact of working from home on productivity change? - Stress Level & Working from Home - Graph #2
-```{r}
+    ## [1] "Unique Stress Levels:"
+    ## [1] "Low"    "Medium" "High"  
+    ## # A tibble: 12 × 6
+    ##    Work_From_Home Stress_Level Childcare_Responsibilities Average_Productivity…¹
+    ##             <dbl> <fct>                             <dbl>                  <dbl>
+    ##  1              0 low                                   0                   1.51
+    ##  2              0 low                                   1                   1.51
+    ##  3              0 medium                                0                   1.49
+    ##  4              0 medium                                1                   1.48
+    ##  5              0 high                                  0                   1.51
+    ##  6              0 high                                  1                   1.54
+    ##  7              1 low                                   0                   1.50
+    ##  8              1 low                                   1                   1.50
+    ##  9              1 medium                                0                   1.50
+    ## 10              1 medium                                1                   1.51
+    ## 11              1 high                                  0                   1.50
+    ## 12              1 high                                  1                   1.48
+    ## # ℹ abbreviated name: ¹​Average_Productivity_Change
+    ## # ℹ 2 more variables: Median_Productivity_Change <dbl>, Count <int>
+
+![](analysis_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+#### Question 3: What is the impact of working from home on productivity change? - Stress Level & Working from Home - Graph \#2
+
+``` r
 ggplot(data, aes(x = Stress_Level, fill = factor(Work_From_Home))) +
   geom_bar(position = "stack") +
   labs(title = "Stress Level and Work From Home Status", 
@@ -245,8 +458,11 @@ ggplot(data, aes(x = Stress_Level, fill = factor(Work_From_Home))) +
   theme_minimal()
 ```
 
+![](analysis_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
 #### Question 3: What is the impact of working from home on productivity change? - Sector
-```{r}
+
+``` r
 # Grouping by Sector to Identify Trends in Productivity change
 # Check if Productivity_Change and Sector exist in the dataset
 if (all(c("Sector", "Productivity_Change") %in% colnames(data))) {
@@ -290,11 +506,26 @@ ggplot(sector_analysis, aes(x = reorder(Sector, -Average_Productivity_Change), y
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
   }
 } 
+```
+
+    ## [1] "Trends in Productivity Change by Sector:"
+    ## # A tibble: 4 × 4
+    ##   Sector     Average_Productivity_Change Median_Productivity_Change Count
+    ##   <chr>                            <dbl>                      <dbl> <int>
+    ## 1 Education                         1.51                          2  2484
+    ## 2 Healthcare                        1.50                          2  2498
+    ## 3 IT                                1.50                          2  2546
+    ## 4 Retail                            1.50                          1  2472
+
+![](analysis_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+``` r
 #The analysis reveals consistent productivity changes across sectors, with average values ranging narrowly from 0.496 (Retail) to 0.508 (Education). Education and IT demonstrate slightly higher productivity changes, possibly reflecting their better adaptation to shifts in work dynamics, such as remote work compatibility. Healthcare shows balanced productivity with an average of 0.500, reflecting its essential and stable operations. Retail lags behind, with the lowest average (0.496) and a median of 0, suggesting significant challenges in adjusting to external factors like COVID-19. The robust and balanced sample sizes across sectors ensure the trends are representative. Overall, Education and IT show slight outperformance, Healthcare demonstrates resilience, and Retail faces notable productivity challenges.
 ```
 
-#### Question 3:  What is the impact of working from home on productivity change? - Sector & Working from Home
-```{r}
+#### Question 3: What is the impact of working from home on productivity change? - Sector & Working from Home
+
+``` r
 # Segmentation analysis: Count of Productivity Change by Sector & Work From Home
 if (all(c("Sector", "Work_From_Home", "Productivity_Change") %in% colnames(data))) {
 
@@ -353,11 +584,42 @@ if (all(c("Sector", "Work_From_Home", "Productivity_Change") %in% colnames(data)
   print(plot_work_from_home)
   print(plot_not_work_from_home)
 }
+```
+
+    ## [1] "Segmentation Analysis: Number of Individuals with Productivity Change by Sector and Work From Home"
+    ## # A tibble: 8 × 3
+    ##   Sector     Work_From_Home Count
+    ##   <chr>               <dbl> <int>
+    ## 1 Education               0   225
+    ## 2 Education               1   997
+    ## 3 Healthcare              0   252
+    ## 4 Healthcare              1   996
+    ## 5 IT                      0   238
+    ## 6 IT                      1  1023
+    ## 7 Retail                  0   265
+    ## 8 Retail                  1   982
+    ## [1] "Segmentation Analysis: Number of Individuals with Productivity Change by Sector and Work From Home"
+    ## # A tibble: 8 × 3
+    ##   Sector     Work_From_Home Count
+    ##   <chr>               <dbl> <int>
+    ## 1 Education               0   225
+    ## 2 Education               1   997
+    ## 3 Healthcare              0   252
+    ## 4 Healthcare              1   996
+    ## 5 IT                      0   238
+    ## 6 IT                      1  1023
+    ## 7 Retail                  0   265
+    ## 8 Retail                  1   982
+
+![](analysis_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->![](analysis_files/figure-gfm/unnamed-chunk-13-2.png)<!-- -->
+
+``` r
 # The analysis shows that productivity trends vary by sector and work arrangement. In Education and IT, employees working on-site exhibit slightly higher productivity, likely due to the collaborative and interactive nature of tasks in these sectors. In contrast, Healthcare and Retail benefit more from remote work, with remote employees showing higher productivity. This is particularly evident in Retail, where remote work roles (e.g., e-commerce or customer service) outperform on-site roles, which may face challenges like reduced foot traffic or operational constraints. Median productivity remains consistent across most groups, except for on-site employees in Healthcare and Retail, where it drops to 0, highlighting potential struggles in these scenarios. These findings suggest that while remote work enhances productivity in some sectors, Education and IT may benefit from hybrid models to balance collaboration and flexibility. Retail operations could focus on supporting on-site employees to mitigate productivity challenges.
 ```
 
-#### Question 3:  What is the impact of working from home on productivity change? - Childcare Responsibilities & Working from Home
-```{r}
+#### Question 3: What is the impact of working from home on productivity change? - Childcare Responsibilities & Working from Home
+
+``` r
 if (all(c("Childcare_Responsibilities", "Work_From_Home", "Productivity_Change") %in% colnames(data))) {
   # Perform analysis: Group by Work_From_Home and Childcare_Responsibilities
   childcare_analysis <- data %>%
@@ -405,12 +667,26 @@ if (all(c("Childcare_Responsibilities", "Work_From_Home", "Productivity_Change")
   print(plot_work_from_home)
   print(plot_not_work_from_home)
 }
+```
 
+    ## [1] "Impact of Childcare Responsibilities on Productivity by Work From Home Status"
+    ## # A tibble: 4 × 3
+    ##   Work_From_Home Childcare_Responsibilities Count
+    ##            <dbl>                      <dbl> <int>
+    ## 1              0                          0   592
+    ## 2              0                          1   388
+    ## 3              1                          0  2409
+    ## 4              1                          1  1589
+
+![](analysis_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->![](analysis_files/figure-gfm/unnamed-chunk-14-2.png)<!-- -->
+
+``` r
 #The analysis shows that employees without childcare responsibilities generally benefit slightly from remote work, with higher average productivity (0.503) compared to those working on-site (0.500). In contrast, employees with childcare responsibilities show slightly lower productivity when working from home (0.501) compared to those not working from home (0.504), likely due to competing demands at home. Median productivity remains consistent across groups, with those managing childcare responsibilities showing a median value of 1 regardless of work arrangement, suggesting that childcare responsibilities do not drastically impact productivity for most employees. Overall, remote work appears more beneficial for employees without childcare responsibilities, while those with childcare may need additional support to balance their responsibilities effectively.
 ```
 
-#### Question 3:  What is the impact of working from home on productivity change? - Health Issues & Working from Home
-```{r}
+#### Question 3: What is the impact of working from home on productivity change? - Health Issues & Working from Home
+
+``` r
 # Analyze the impact of remote work on productivity for employees with Health Issues
 if (all(c("Health_Issue", "Work_From_Home", "Productivity_Change") %in% colnames(data))) {
   
@@ -459,11 +735,27 @@ if (all(c("Health_Issue", "Work_From_Home", "Productivity_Change") %in% colnames
     theme_minimal() +
     theme(axis.text.x = element_text(angle = 0, hjust = 0.5))
 }
+```
+
+    ## [1] "Impact of Remote Work on Productivity for Employees with Health Issues:"
+    ## # A tibble: 4 × 5
+    ##   Health_Issue Work_From_Home Avg_Productivity_Change Median_Productivity_Change
+    ##          <dbl>          <dbl>                   <dbl>                      <dbl>
+    ## 1            0              0                    1.51                          2
+    ## 2            0              1                    1.50                          2
+    ## 3            1              0                    1.49                          1
+    ## 4            1              1                    1.51                          2
+    ## # ℹ 1 more variable: Count <int>
+
+![](analysis_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+
+``` r
 # The analysis reveals that remote work has varying impacts on productivity depending on whether employees have health issues. For employees without health issues, those working on-site show a slightly higher average productivity change (0.506) compared to remote workers (0.501), but the difference is minimal, and both groups maintain a median productivity change of 1. In contrast, for employees with health issues, remote work appears to mitigate productivity declines. On-site employees with health issues show a lower average productivity change (0.491) and a median productivity change of 0, whereas remote employees with health issues show an average productivity change of 0.506 and a median of 1. This indicates that remote work provides a more accommodating environment for employees with health issues, helping them achieve similar productivity levels to their counterparts without health issues. Overall, the results suggest that remote work may serve as an effective strategy to support productivity for employees with health-related challenges.
 ```
 
-#### Question 4: Are there significant correlations between productivity_change and other numeric variables? 
-```{r}
+#### Question 4: Are there significant correlations between productivity_change and other numeric variables?
+
+``` r
 if (all(c("Stress_Level", "Work_From_Home", "Productivity_Change") %in% colnames(data))) {
   stress_analysis <- data %>%
     group_by(Work_From_Home, Stress_Level) %>%
@@ -493,11 +785,28 @@ if (all(c("Stress_Level", "Work_From_Home", "Productivity_Change") %in% colnames
     theme_minimal() +
     theme(axis.text.x = element_text(size = 10, angle = 0, hjust = 0.5))
 }
+```
+
+    ## [1] "Impact of Stress Level on Productivity by Work From Home "
+    ## # A tibble: 6 × 5
+    ##   Work_From_Home Stress_Level Avg_Productivity Median_Productivity Count
+    ##            <dbl> <fct>                   <dbl>               <dbl> <int>
+    ## 1              0 low                      1.51                   2   400
+    ## 2              0 medium                   1.48                   1   965
+    ## 3              0 high                     1.52                   2   602
+    ## 4              1 low                      1.50                   2  1608
+    ## 5              1 medium                   1.51                   2  3991
+    ## 6              1 high                     1.50                   1  2434
+
+![](analysis_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+
+``` r
 #The analysis reveals that employees with medium stress levels benefit the most from remote work, showing a higher average productivity change (0.507) compared to those not working from home (0.484), likely due to the flexibility and work-life balance remote work provides. Conversely, employees with high stress levels experience slightly lower productivity when working remotely (0.495) compared to in-person work (0.525), suggesting they may require more immediate support or structure. For employees with low stress levels, productivity outcomes are relatively balanced between remote (0.501) and in-person work (0.51). Overall, while remote work appears advantageous for those with moderate stress, high-stress employees may benefit from targeted support to thrive in remote environments.
 ```
 
 #### Question 5: Do employees who experienced salary cuts show different productivity trends compared to those with stable salaries?
-```{r}
+
+``` r
 # Analyze the relationship between Salary Changes and Productivity Change
 if (all(c("Salary_Changes", "Productivity_Change") %in% colnames(data))) {
   
@@ -542,8 +851,28 @@ if (all(c("Salary_Changes", "Productivity_Change") %in% colnames(data))) {
 }
 ```
 
+    ## [1] "Analysis of Productivity Change by Salary Changes:"
+    ## # A tibble: 2 × 4
+    ##   Salary_Changes Avg_Productivity_Change Median_Productivity_Change Count
+    ##            <dbl>                   <dbl>                      <dbl> <int>
+    ## 1              0                    1.50                          2  8052
+    ## 2              1                    1.50                          2  1948
+    ## [1] "T-test Results:"
+    ## 
+    ##  Welch Two Sample t-test
+    ## 
+    ## data:  salary_cut_group and stable_salary_group
+    ## t = -0.1154, df = 2960.7, p-value = 0.9081
+    ## alternative hypothesis: true difference in means is not equal to 0
+    ## 95 percent confidence interval:
+    ##  -0.02621670  0.02330238
+    ## sample estimates:
+    ## mean of x mean of y 
+    ##  1.501027  1.502484
+
 #### Question 6: What was the impact of Childcare Responsibilities, Commuting Changes, and Health Issues on Technology Adaptation Levels
-```{r}
+
+``` r
 # Analyze the impact of Childcare Responsibilities, Commuting Changes, and Health Issues on Technology Adaptation Levels
 if (all(c("Childcare_Responsibilities", "Commuting_Changes", "Health_Issue", "Technology_Adaptation") %in% colnames(data))) {
   
@@ -600,17 +929,39 @@ if (all(c("Childcare_Responsibilities", "Commuting_Changes", "Health_Issue", "Te
     theme_minimal() +
     theme(axis.text.x = element_text(angle = 0, hjust = 0.5))
 }
+```
+
+    ## [1] "Impact of Childcare Responsibilities, Commuting Changes, and Health Issues on Technology Adaptation:"
+    ## # A tibble: 8 × 6
+    ##   Childcare_Responsibili…¹ Commuting_Changes Health_Issue Avg_Technology_Adapt…²
+    ##                      <dbl>             <dbl>        <dbl>                  <dbl>
+    ## 1                        0                 0            0                  0.591
+    ## 2                        0                 0            1                  0.628
+    ## 3                        0                 1            0                  0.597
+    ## 4                        0                 1            1                  0.588
+    ## 5                        1                 0            0                  0.626
+    ## 6                        1                 0            1                  0.615
+    ## 7                        1                 1            0                  0.606
+    ## 8                        1                 1            1                  0.616
+    ## # ℹ abbreviated names: ¹​Childcare_Responsibilities, ²​Avg_Technology_Adaptation
+    ## # ℹ 2 more variables: Median_Technology_Adaptation <dbl>, Count <int>
+
+![](analysis_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+
+``` r
 # Employees with childcare responsibilities consistently exhibit slightly higher technology adaptation levels, likely driven by the need to rely on technology for managing tasks at home. Reduced commuting further enhances adaptation, as employees without commuting changes tend to adapt better, likely due to increased time and energy availability. Health issues have mixed effects, with the highest adaptation observed among employees without commuting changes but with health issues (0.628), suggesting that remote work or reduced commuting can support these employees. Conversely, the lowest adaptation (0.588) is seen in employees with health issues and commuting changes, highlighting compounded challenges
 ```
 
 #### Question 7: What are the key takeaways or recommendations based on our analysis?
-```{r}
+
+``` r
 # Our analysis highlights key findings: (1) Remote work supports productivity, especially for employees with health issues, while medium-stress employees see a 4.8% higher productivity boost when working remotely. (2) Education and IT sectors show the highest average productivity changes (0.508 and 0.505, respectively), whereas retail struggles at 0.496. (3) Employees with childcare responsibilities working remotely exhibit slightly lower productivity (0.501 vs. 0.504 on-site). (4) Technology adaptation is highest (0.628) among employees without commuting demands but with health issues.
 
 # Overall Conclusion/Suggestion: Organizations should adopt hybrid work models that balance flexibility and collaboration, provide targeted sector-specific support, and implement flexible schedules and health accommodations to address diverse employee needs. By prioritizing technology training and supportive policies, businesses can foster a more adaptive, resilient, and productive workforce in the evolving work landscape.
 ```
 
 #### Question 8: What can we improve if this analysis were conducted again?
-```{r}
+
+``` r
 # To improve our data analysis, we can collect more detailed data, such as age or job roles, to better understand patterns. We’ll handle missing data with smarter methods, like estimating based on similar cases, rather than relying on simple averages. Cleaning the data involves standardizing values and checking for overlaps between variables. Using statistical tools like regression and trend analysis, we can explore relationships and patterns over time. By grouping data meaningfully, such as by employee roles or industries, we can uncover unique insights. We’ll enhance visuals with interactive tools and comparisons to make results clearer. Combining survey feedback adds valuable context, while ensuring our data fairly represents all groups avoids bias. By applying machine learning, we can predict outcomes and pinpoint key factors. Finally, we’ll tailor recommendations to specific groups and test ideas incrementally, refining them with stakeholder feedback.
 ```
