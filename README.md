@@ -578,7 +578,7 @@ The data indicates that salary changes (cuts or stability) had
 negligible impact on productivity trends during the observed period.
 Both groups maintained similar productivity levels.
 
-#### Question 6: What was the impact of Childcare Responsibilities, Commuting Changes, and Health Issues on Technology Adaptation Levels?
+#### Question 6: What was the impact of Childcare Responsibilities, Commuting Changes, and Health Issues on Technology Adaptation Levels
 
 ![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
