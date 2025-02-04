@@ -1,7 +1,9 @@
-Final Project
-================
-Bhargav Yellepeddi, Neel Rajan, Ananya Ramji, Amaya Bayoumi
-12/17/2024
+
+# Final Project
+
+### **Authors:** Bhargav Yellepeddi, Neel Rajan, Ananya Ramji, Amaya Bayoumi
+
+**Date:** December 17, 2024
 
 ## Load and visualize data
 
@@ -11,7 +13,7 @@ data <- read_csv("covid_impact_on_work new.csv")
 ```
 
     ## Rows: 10000 Columns: 15
-    ## ── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+    ## ── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr  (4): Stress_Level, Sector, Hours_Worked_Per_Day, Meetings_Per_Day
     ## dbl (11): Increased_Work_Hours, Work_From_Home, Productivity_Change, Health_...
@@ -401,17 +403,12 @@ if (all(c("Work_From_Home", "Productivity_Change", "Stress_Level", "Childcare_Re
   print(analysis)
   
   # Visualize the impact
-  ggplot(analysis, aes(x = Stress_Level, y = Average_Productivity_Change, fill = as.factor(Work_From_Home))) +
-    geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
-    facet_wrap(~ Childcare_Responsibilities, scales = "free") +
-    labs(
-      title = "Productivity Change by Stress Level and Childcare",
-      x = "Stress Level",
-      y = "Average Productivity Change",
-      fill = "Work From Home (0 = No, 1 = Yes)"
-    ) +
-    theme_minimal() +
-    theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1), axis.title.x = element_text(size = 12))
+ggplot(data, aes(x = Stress_Level, fill = factor(Work_From_Home))) +
+  geom_bar(position = "stack") +
+  labs(title = "Stress Level and Work From Home Status", 
+      x = "Stress Level", 
+      y = "Count of Employees") +
+  theme_minimal()
 }
 ```
 
@@ -436,19 +433,6 @@ if (all(c("Work_From_Home", "Productivity_Change", "Stress_Level", "Childcare_Re
     ## # ℹ 2 more variables: Median_Productivity_Change <dbl>, Count <int>
 
 ![](analysis_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
-
-#### Question 3: What is the impact of working from home on productivity change? - Stress Level & Working from Home - Graph \#2
-
-``` r
-ggplot(data, aes(x = Stress_Level, fill = factor(Work_From_Home))) +
-  geom_bar(position = "stack") +
-  labs(title = "Stress Level and Work From Home Status", 
-      x = "Stress Level", 
-      y = "Count of Employees") +
-  theme_minimal()
-```
-
-![](analysis_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 #### Question 3: What is the impact of working from home on productivity change? - Sector
 
@@ -507,7 +491,7 @@ ggplot(sector_analysis, aes(x = reorder(Sector, -Average_Productivity_Change), y
     ## 3 IT                               0.505                          1  2546
     ## 4 Retail                           0.496                          0  2472
 
-![](analysis_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](analysis_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 ``` r
 #The analysis reveals consistent productivity changes across sectors, with average values ranging narrowly from 0.496 (Retail) to 0.508 (Education). Education and IT demonstrate slightly higher productivity changes, possibly reflecting their better adaptation to shifts in work dynamics, such as remote work compatibility. Healthcare shows balanced productivity with an average of 0.500, reflecting its essential and stable operations. Retail lags behind, with the lowest average (0.496) and a median of 0, suggesting significant challenges in adjusting to external factors like COVID-19. The robust and balanced sample sizes across sectors ensure the trends are representative. Overall, Education and IT show slight outperformance, Healthcare demonstrates resilience, and Retail faces notable productivity challenges.
@@ -601,7 +585,7 @@ if (all(c("Sector", "Work_From_Home", "Productivity_Change") %in% colnames(data)
     ## 7 Retail                  0   232
     ## 8 Retail                  1   993
 
-![](analysis_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->![](analysis_files/figure-gfm/unnamed-chunk-13-2.png)<!-- -->
+![](analysis_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->![](analysis_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
 
 ``` r
 # The analysis shows that productivity trends vary by sector and work arrangement. In Education and IT, employees working on-site exhibit slightly higher productivity, likely due to the collaborative and interactive nature of tasks in these sectors. In contrast, Healthcare and Retail benefit more from remote work, with remote employees showing higher productivity. This is particularly evident in Retail, where remote work roles (e.g., e-commerce or customer service) outperform on-site roles, which may face challenges like reduced foot traffic or operational constraints. Median productivity remains consistent across most groups, except for on-site employees in Healthcare and Retail, where it drops to 0, highlighting potential struggles in these scenarios. These findings suggest that while remote work enhances productivity in some sectors, Education and IT may benefit from hybrid models to balance collaboration and flexibility. Retail operations could focus on supporting on-site employees to mitigate productivity challenges.
@@ -668,7 +652,7 @@ if (all(c("Childcare_Responsibilities", "Work_From_Home", "Productivity_Change")
     ## 3              1                          0  2440
     ## 4              1                          1  1595
 
-![](analysis_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->![](analysis_files/figure-gfm/unnamed-chunk-14-2.png)<!-- -->
+![](analysis_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->![](analysis_files/figure-gfm/unnamed-chunk-13-2.png)<!-- -->
 
 ``` r
 #The analysis shows that employees without childcare responsibilities generally benefit slightly from remote work, with higher average productivity (0.503) compared to those working on-site (0.500). In contrast, employees with childcare responsibilities show slightly lower productivity when working from home (0.501) compared to those not working from home (0.504), likely due to competing demands at home. Median productivity remains consistent across groups, with those managing childcare responsibilities showing a median value of 1 regardless of work arrangement, suggesting that childcare responsibilities do not drastically impact productivity for most employees. Overall, remote work appears more beneficial for employees without childcare responsibilities, while those with childcare may need additional support to balance their responsibilities effectively.
@@ -737,7 +721,7 @@ if (all(c("Health_Issue", "Work_From_Home", "Productivity_Change") %in% colnames
     ## 4            1              1                   0.506                          1
     ## # ℹ 1 more variable: Count <int>
 
-![](analysis_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](analysis_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 ``` r
 # The analysis reveals that remote work has varying impacts on productivity depending on whether employees have health issues. For employees without health issues, those working on-site show a slightly higher average productivity change (0.506) compared to remote workers (0.501), but the difference is minimal, and both groups maintain a median productivity change of 1. In contrast, for employees with health issues, remote work appears to mitigate productivity declines. On-site employees with health issues show a lower average productivity change (0.491) and a median productivity change of 0, whereas remote employees with health issues show an average productivity change of 0.506 and a median of 1. This indicates that remote work provides a more accommodating environment for employees with health issues, helping them achieve similar productivity levels to their counterparts without health issues. Overall, the results suggest that remote work may serve as an effective strategy to support productivity for employees with health-related challenges.
@@ -788,7 +772,7 @@ if (all(c("Stress_Level", "Work_From_Home", "Productivity_Change") %in% colnames
     ## 5              1 medium                  0.507                   1  3991
     ## 6              1 high                    0.495                   0  2434
 
-![](analysis_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](analysis_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 ``` r
 #The analysis reveals that employees with medium stress levels benefit the most from remote work, showing a higher average productivity change (0.507) compared to those not working from home (0.484), likely due to the flexibility and work-life balance remote work provides. Conversely, employees with high stress levels experience slightly lower productivity when working remotely (0.495) compared to in-person work (0.525), suggesting they may require more immediate support or structure. For employees with low stress levels, productivity outcomes are relatively balanced between remote (0.501) and in-person work (0.51). Overall, while remote work appears advantageous for those with moderate stress, high-stress employees may benefit from targeted support to thrive in remote environments.
@@ -936,7 +920,7 @@ if (all(c("Childcare_Responsibilities", "Commuting_Changes", "Health_Issue", "Te
     ## # ℹ abbreviated names: ¹​Childcare_Responsibilities, ²​Avg_Technology_Adaptation
     ## # ℹ 2 more variables: Median_Technology_Adaptation <dbl>, Count <int>
 
-![](analysis_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+![](analysis_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 ``` r
 # Employees with childcare responsibilities consistently exhibit slightly higher technology adaptation levels, likely driven by the need to rely on technology for managing tasks at home. Reduced commuting further enhances adaptation, as employees without commuting changes tend to adapt better, likely due to increased time and energy availability. Health issues have mixed effects, with the highest adaptation observed among employees without commuting changes but with health issues (0.628), suggesting that remote work or reduced commuting can support these employees. Conversely, the lowest adaptation (0.588) is seen in employees with health issues and commuting changes, highlighting compounded challenges

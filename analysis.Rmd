@@ -1,9 +1,10 @@
 ---
-title: 'Final Project'
-author: "Bhargav Yellepeddi, Neel Rajan, Ananya Ramji, Amaya Bayoumi"
-date: "12/17/2024"
 output: github_document
 ---
+
+# Final Project  
+### **Authors:** Bhargav Yellepeddi, Neel Rajan, Ananya Ramji, Amaya Bayoumi  
+**Date:** December 17, 2024  
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
