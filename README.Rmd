@@ -6,18 +6,18 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Analysis on COVID Impact on Work
-#### Bhargav Yellepeddi, Neel Rajan, Amaya Bayoumi, Ananya Ramji
+# Data Analysis of COVID-19's Impact on Work
+#### **Team Lead: Bhargav Yellepeddi**<br>Associates: Neel Rajan, Amaya Bayoumi, Ananya Ramji
 
 ## Introduction
 
 In this analysis, we explore a dataset detailing information about how covid had an impact on people's work lives.
 
-The goal of this project is to explore how Pandemics like COVID can impact various aspects of our lives. When the COVID-19 Pandemic occurred, society as a whole was not at all prepared on how to react, which caused lots of famine in many counties and sent the world into chaos. By analyzing this dataset, people can better understand what areas of life will be impacted the most, and thus learn how to better prepare for future events such as COVID. Ultimately, our goal is to determine the best methods that can minimize the impacts of Pandemic-like events.
+The goal of this project is to explore how Pandemics like COVID can impact various aspects of our lives. When the COVID-19 Pandemic occurred, society as a whole was not at all prepared on how to react, which caused lots of famine in many counties and sent the world into chaos. By analyzing this dataset, people can better understand what areas of life will be impacted the most, and thus learn how to better prepare for future events such as COVID-19. Ultimately, our goal is to determine the best methods that can minimize the impacts of Pandemic-like events.
 
 To achieve this objective, we will explore the following questions:
 
-1. What cleaning methods were applied, and why?
+1. What data cleaning methods are applied, and why?
 
 2. What is the distribution of the "Productivity_Change" and "Stress_Level" Variables?
 
@@ -100,7 +100,7 @@ unique(data)
 
 After a check for unique values, it is evident that there is an issue with the columns "Hours_Worked_Per_Day" and "Meetings_Per_Day" as their values do not align with typical numbers. However, the other columns seem to have their proper data types and range of values.
 
-#### Question 1: What cleaning methods were applied, and why?
+#### Question 1: What data cleaning methods are applied, and why?
 
 From the information listed above, we realized that not much Data Cleaning is necessary for the dataset: the binaary values are all already listed as doubles, where numerics fall under; the verbal columns have the proper "character" data type; the null check shows 0 null values for all columns, which means we do not need to perform any substitution or data removal; and lastly, from the unique input types, except the Hours_Worked_Per_Day and Meetings_Per_Day columns, all column indicate that they only have the data types they should have, such as binary variables only have binary types. That of course leaves us with the need to fix the Hours_Worked_Per_Day and Meetings_Per_Day columns. The way the data is inputed in these columns is very interesting; it is most likely formatted in a different countries numeric system, especially with the number of decimals - ex. "6.392.393.639.805.820". At first, we thought that maybe each input was representing multiple days of the week per person, but the column explicitly states "Hours_Worked_Per_Day" or "Meetings_Per_Day" implying each input describes the value per day. This means that something like hours should range from 0-24 hours, which made us to believe that the data was inputted without any sort of rounding, resulting in the long floating values we see. However, after even further analysis, we found a negative value inputted into the "Meetings_Per_Day" column: -5.829.769.194.792.650. At this point, we could not find any reasoning or explanattion that clarifies how this value could exist; it is not possible to have negative meetings in a day. With seeing the unsusally decimal input and the anomoly of negative meetings, we finally decided that it was best to completely remove both these columns from the dataset as it was evident that they were corrupted.
 
