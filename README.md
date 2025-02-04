@@ -14,13 +14,13 @@ occurred, society as a whole was not at all prepared on how to react,
 which caused lots of famine in many counties and sent the world into
 chaos. By analyzing this dataset, people can better understand what
 areas of life will be impacted the most, and thus learn how to better
-prepare for future events such as COVID. Ultimately, our goal is to
+prepare for future events such as COVID-19. Ultimately, our goal is to
 determine the best methods that can minimize the impacts of
 Pandemic-like events.
 
 To achieve this objective, we will explore the following questions:
 
-1.  What cleaning methods were applied, and why?
+1.  What data cleaning methods are applied, and why?
 
 2.  What is the distribution of the “Productivity_Change” and
     “Stress_Level” Variables?
@@ -259,7 +259,7 @@ with the columns “Hours_Worked_Per_Day” and “Meetings_Per_Day” as their
 values do not align with typical numbers. However, the other columns
 seem to have their proper data types and range of values.
 
-#### Question 1: What cleaning methods were applied, and why?
+#### Question 1: What data cleaning methods are applied, and why?
 
 From the information listed above, we realized that not much Data
 Cleaning is necessary for the dataset: the binaary values are all
